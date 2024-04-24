@@ -1,26 +1,21 @@
 html,
 body {
     height: 100%;
-    /* Ensures the html and body occupy full height */
     margin: 0;
     padding: 0;
     background-color: #141414;
     color: #ffffff;
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 .header {
     background-color: #000000;
     padding: 10px 20px;
     height: 60px;
-    /* Height of the header */
     display: flex;
     justify-content: center;
-    /* Centers items horizontally */
     align-items: center;
-    /* Aligns items vertically */
     position: relative;
-    /* Needed for absolute positioning of year selector */
 }
 
 .header img {
@@ -59,8 +54,8 @@ body {
 
 .dashboard-box {
     background-color: #e50914;
-    padding: 15px;
-    margin: 5px;
+    padding: 5px;
+    /* margin: 5px; */
     flex-grow: 1;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -82,4 +77,32 @@ body {
 
 .dashboard-box h4 {
     margin: 0;
+}
+
+svg {
+    margin: 5px;
+    border: 1px solid #ccc;
+}
+
+.axis text {
+    text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff;
+    cursor: grab;
+}
+
+.line1 path {
+    fill: none;
+    stroke: rgb(226, 224, 224);
+    shape-rendering: crispEdges;
+}
+
+.line2 path {
+    fill: none;
+    stroke: rgb(61, 113, 155);
+}
+
+.chart-container {
+    height: 275px;
+    width: 685px;
+    background-color: white;
+    margin: 20px;
 }

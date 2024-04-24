@@ -29,9 +29,9 @@ dfroot = pd.read_csv(dataset)
 df0 = dfroot[["patents_log2", "citations_log2", "FamilyCitations_log2", "NFCitations_log2", "P01_log2", "P18_log2", "C01_log2", "C18_log2", "NFC01_log2", "NFC18_log2"]]
 
 # Route for index page
-@app.route("/")
-def index():
-    return render_template("index.html")
+# @app.route("/")
+# def index():
+#     return render_template("index.html")
 
 # Route to set K value
 @app.route("/kValue", methods=["POST"])
@@ -75,26 +75,26 @@ def min_max_scaling(value, min_val, max_val, new_min, new_max):
     return ((value - min_val) / (max_val - min_val)) * (new_max - new_min) + new_min
 
 # Start elbow plot
-data = df0
-mse = {}
-for k in range(1, 11):
-    kmeans = KMeans(n_clusters=k, max_iter=1000).fit(data)
-    data["clusters"] = kmeans.labels_
-    mse[k] = kmeans.inertia_
-list_x = list(mse.keys())
-list_y = list(mse.values())
-min_val = min(list_y)
-max_val = max(list_y)
-scaled_list_y = [min_max_scaling(val, min_val, max_val, 0, 100) for val in list_y]
+# data = df0
+# mse = {}
+# for k in range(1, 11):
+#     kmeans = KMeans(n_clusters=k, max_iter=1000).fit(data)
+#     data["clusters"] = kmeans.labels_
+#     mse[k] = kmeans.inertia_
+# list_x = list(mse.keys())
+# list_y = list(mse.values())
+# min_val = min(list_y)
+# max_val = max(list_y)
+# scaled_list_y = [min_max_scaling(val, min_val, max_val, 0, 100) for val in list_y]
 
-dictionary = {}
-jsonv = {"x_axis": "K values", "y_axis": "MSE", "data":[]}
-for i in range(0, 10):
-    print(list_x[i])
-    print(scaled_list_y[i])
-    jsonv['data'].append({"factor": list_x[i], "eigen_value": scaled_list_y[i]})
-dictionary = jsonv
-Data = myData.data
+# dictionary = {}
+# jsonv = {"x_axis": "K values", "y_axis": "MSE", "data":[]}
+# for i in range(0, 10):
+#     print(list_x[i])
+#     print(scaled_list_y[i])
+#     jsonv['data'].append({"factor": list_x[i], "eigen_value": scaled_list_y[i]})
+# dictionary = jsonv
+# Data = myData.data
 # columns = 10
 # filename = "clusterIds.csv"
 # generate_csv(filename, dfroot, columns)
@@ -114,7 +114,7 @@ data3 = df.copy()
 # Run KMeans clustering for data2
 kmeans1_data = run_kmeans(data2, n_clusters=3)
 
-# Run KMeans clustering for data3
+# # Run KMeans clustering for data3
 kmeans2_data = run_kmeans(data3, n_clusters=5)
 
 # TODO 559
@@ -127,9 +127,9 @@ def process_mds_data(data, scaler, sample_size=559):
     return df.to_json()
 
 # Process MDS data for kmeans_data
-std_scaler = StandardScaler()
-e00Json = process_mds_data(kmeans1_data, std_scaler)
-e01Json = process_mds_data(kmeans2_data, std_scaler)
+# std_scaler = StandardScaler()
+# e00Json = process_mds_data(kmeans1_data, std_scaler)
+# e01Json = process_mds_data(kmeans2_data, std_scaler)
 
 # Process MDS data for variable
 cluster_num = data2.loc[:, data2.columns != 'color']
@@ -149,14 +149,21 @@ e20Json = read_pcp_data(dataset, data2)
 e21Json = read_pcp_data(dataset, data3)
 
 # Combine data
-combined_data = {'elbowData': dictionary,'mdsData0':e00Json,'mdsData1':e01Json, 'mdsVariables': e1Json, 'pcp0': e20Json, 'pcp1': e21Json}
+# combined_data = {'elbowData': dictionary,'mdsData0':e00Json,'mdsData1':e01Json, 'mdsVariables': e1Json, 'pcp0': e20Json, 'pcp1': e21Json}
+combined_data = {'pcp0': e20Json, 'pcp1': e21Json}
 combined_data_string = json.dumps(combined_data)
 
-print('dict ', dictionary)
+# print('dict ', dictionary)
 print('server started')
 
-@app.route('/combo')
+# @app.route('/combo')
+# def get_combo():
+#     myData.data = json.loads(combined_data_string)
+#     Data = myData.data
+#     return render_template("combo.html", Data=Data)
+
+@app.route('/')
 def get_combo():
     myData.data = json.loads(combined_data_string)
     Data = myData.data
-    return render_template("combo.html", Data=Data)
+    return render_template("dashboard.html", Data=Data)
