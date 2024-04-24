@@ -57,8 +57,14 @@ body {
     justify-content: space-between;
 }
 
+path {
+    fill: #ccc;
+    stroke: #333;
+    stroke-width: 1;
+}
+
 .dashboard-box {
-    background-color: #e50914;
+    background-color: #ffffff;
     padding: 15px;
     margin: 5px;
     flex-grow: 1;
