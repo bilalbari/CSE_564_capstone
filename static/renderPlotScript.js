@@ -7,18 +7,18 @@ function renderPlot() {
 
         /*elbowPlotData = result.elbowData;
 
-                    var mdsData = JSON.parse(result.mdsData0);
-                    resultMdsData1 = result.mdsData1;
-                    var currMdsData = { ...mdsData };
-                    delete currMdsData.zVal;
-                    plotMdsData(currMdsData);
+                        var mdsData = JSON.parse(result.mdsData0);
+                        resultMdsData1 = result.mdsData1;
+                        var currMdsData = { ...mdsData };
+                        delete currMdsData.zVal;
+                        plotMdsData(currMdsData);
 
-                    var mdsVariablePlot = JSON.parse(result.mdsVariables);
-                    console.log("mdsVariablesData ", mdsVariablePlot);
+                        var mdsVariablePlot = JSON.parse(result.mdsVariables);
+                        console.log("mdsVariablesData ", mdsVariablePlot);
 
-                    mdsVariable = { ...mdsVariablePlot };
-                    delete mdsVariable.zVal;
-                    plotMdsVariable(mdsVariable);*/
+                        mdsVariable = { ...mdsVariablePlot };
+                        delete mdsVariable.zVal;
+                        plotMdsVariable(mdsVariable);*/
 
         // Plot pcp
         console.log(result);
@@ -38,5 +38,8 @@ function renderPlot() {
         });
         setPcpData(d);
         plotPcp();
+
+        //plot word cloud
+        renderWordCloudPlot();
     });
 }
