@@ -101,14 +101,14 @@ svg {
 }
 
 .chart-container {
-    height: 275px;
+    height: 265px;
     width: 685px;
     background-color: white;
     margin: 20px;
 }
 
 .small-chart-container {
-    height: 275px;
+    height: 265px;
     width: 325px;
     background-color: white;
     margin: 20px;

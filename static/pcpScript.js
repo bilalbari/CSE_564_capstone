@@ -17,7 +17,7 @@ const margin = {
     left: 45,
 };
 const width = 675 - margin.left - margin.right;
-const height = 265 - margin.top - margin.bottom;
+const height = 255 - margin.top - margin.bottom;
 let pcpData, pcpDataDim, dataDim;
 let ordering = {};
 var line = d3.line();

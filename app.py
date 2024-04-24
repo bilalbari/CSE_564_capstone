@@ -157,9 +157,19 @@ def read_pcp_data(data, color_data):
 e20Json = read_pcp_data(dataset, data2)
 # e21Json = read_pcp_data(dataset, data3)
 
+def read_word_cloud_data(data):
+    # cols = ["MC_Grade", "LS_Grade", "IPO_Year_encoded", "patents_log2", "citations_log2", "FamilyCitations_log2", "NFCitations_log2", "P01_log2", "P18_log2", "C01_log2", "C18_log2", "NFC01_log2", "NFC18_log2"]
+    cols = ["description"]
+    df = pd.read_csv(dataset, usecols=cols)
+    sampled_df = df.sample(n=100, random_state=42) 
+    return sampled_df.to_json(orient='records')
+
+
+eWordCloudJson = read_word_cloud_data(dataset)
+
 # Combine data
 # combined_data = {'elbowData': dictionary,'mdsData0':e00Json,'mdsData1':e01Json, 'mdsVariables': e1Json, 'pcp0': e20Json, 'pcp1': e21Json}
-combined_data = {'pcp0': e20Json}
+combined_data = {'pcp0': e20Json, 'wordCloud': eWordCloudJson}
 combined_data_string = json.dumps(combined_data)
 
 # print('dict ', dictionary)
