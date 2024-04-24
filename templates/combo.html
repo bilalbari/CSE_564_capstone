@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<script src="https://d3js.org/d3.v4.js"></script>
+
+<head>
+    <div id="navigation"></div>
+    <br><br>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#navigation").load('nav');
+            renderPlot();
+        });
+    </script>
+</head>
+
+<style>
+    #screePlot {
+        font-size: 110%;
+        font-family: Verdana;
+    }
+
+    #screePlot g {
+        cursor: pointer;
+    }
+
+    rect.background {
+        fill: #f0f0f0;
+        stroke: #999;
+        stroke-width: 1px;
+        stroke-dasharray: 3, 3;
+        stroke-linejoin: round;
+    }
+
+    #screePlot .overlay {
+        fill: #f9f9f9;
+        pointer-events: all;
+    }
+
+    .axis {
+        shape-rendering: crispEdges;
+    }
+
+    .plotClass {
+        margin: auto;
+        margin-top: -60px;
+        width: 70%;
+        padding: 20px;
+    }
+
+    #screePlot .line .cumulative {
+        fill: none;
+        stroke: #1e88e5;
+        stroke-width: 2px;
+    }
+
+    #screePlot .line .plus {
+        fill: none;
+        stroke-width: 1.5px;
+    }
+
+    #screePlot .line #plusY {
+        stroke: #333;
+        stroke-opacity: 0.5;
+    }
+
+    .legendClass {
+        border: 2px solid #333;
+        border-radius: 25px;
+        margin-left: 500px;
+        width: 30%;
+        padding: 10px;
+    }
+
+    .legend1 {
+        margin: auto;
+        width: 80%;
+        padding-left: 170px;
+        padding-bottom: 30px;
+    }
+
+    .legend2 {
+        padding-left: 20px;
+    }
+
+    body {
+        font-family: Arial, sans-serif;
+    }
+
+    svg {
+        border: 1px solid #ccc;
+    }
+
+    .center1 {
+        margin: 0 auto;
+    }
+
+    body {
+        font-family: Arial, sans-serif;
+    }
+
+    svg {
+        border: 1px solid #ccc;
+    }
+
+    .axis text {
+        text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff;
+        cursor: grab;
+    }
+
+    .line1 path {
+        fill: none;
+        stroke: rgb(226, 224, 224);
+        shape-rendering: crispEdges;
+    }
+
+    .line2 path {
+        fill: none;
+        stroke: rgb(61, 113, 155);
+    }
+
+    .container {
+        margin: 20px;
+    }
+
+    .hidden {
+        display: none;
+    }
+
+    .radioContainer {
+        display: flex;
+        align-items: center;
+        margin: 20px;
+        margin-left: 120px;
+        margin-top: 50px;
+    }
+
+    .radio-buttons {
+        display: flex;
+        align-items: center;
+        margin-left: 100px;
+        /* Adjust as needed */
+    }
+
+    input[type="radio"] {
+        display: none;
+    }
+
+    input[type="radio"]+label {
+        font-family: Arial, sans-serif;
+        font-size: 16px;
+        cursor: pointer;
+        padding-left: 25px;
+        position: relative;
+        margin-right: 15px;
+        /* Adjust as needed */
+    }
+
+    input[type="radio"]+label:before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 18px;
+        height: 18px;
+        border: 2px solid #4CAF50;
+        border-radius: 50%;
+        background-color: transparent;
+    }
+
+    input[type="radio"]:checked+label:before {
+        background-color: #4CAF50;
+    }
+
+    #customKBtn {
+        background-color: #207cd8;
+        /* Dark grey background */
+        color: #ffffff;
+        /* White text */
+        padding: 10px 20px;
+        /* Padding around text */
+        border: none;
+        /* No border */
+        border-radius: 5px;
+        /* Rounded corners */
+        cursor: pointer;
+        /* Cursor style */
+        transition: background-color 0.3s ease;
+        /* Smooth transition */
+        margin-left: 430px;
+        margin-top: 20px;
+    }
+
+    #customKBtn:hover {
+        background-color: #68a1da;
+        /* Darken background on hover */
+    }
+</style>
+
+<body>
+    <div class="radioContainer">
+        <h5>Select which MDS plot you want to see</h5>
+        <div class="radio-buttons">
+            <input type="radio" id="option1" name="options" value="option1" checked>
+            <label for="option1">MDS Data Plot</label>
+
+            <input type="radio" id="option2" name="options" value="option2">
+            <label for="option2">MDS Variable Plot</label>
+        </div>
+    </div>
+
+    <div class="container" id="div1" style="margin-left: 140px;">
+        <div id="mdsData">
+            <h3 style="margin-left: -180px; margin-top: 60px;">MDS Data Plot</h3>
+            <div id="plotContainer"></div>
+        </div>
+    </div>
+
+    <div class="container hidden" id="div2" style="margin-left: 140px;">
+        <div id="mdsVariable">
+            <div>
+                <h3 style="margin-left: -180px; margin-top: 60px;">MDS Variable Plot</h3>
+                <svg id="mdsVariableSVG"></svg>
+            </div>
+        </div>
+        <button id="customKBtn" type="button">Plot PCP for selected variables</button>
+    </div>
+
+    <div class="container">
+        <h3 style="margin-left: 100px; margin-top: 60px;">Parallel Coordinates Plot</h3>
+        <div id="pcpContainer" style="margin-left: 20px;"></div>
+    </div>
+
+    <h3 style="text-align: center; margin-top: 60px;">MSE vs. K values</h3>
+    <div class="plotClass">
+        <div id="screePlot"></div>
+    </div>
+    <div class="legendClass">
+        <div>
+            <span class="legend1">K is set to:</span>
+            <span class="legend2" id="kValue"></span>
+        </div>
+    </div>
+
+    <!-- radio button script -->
+    <script src="{{ url_for('static', filename='radioButtonScript.js') }}"></script>
+
+    <!-- Render plot -->
+    <script src="{{ url_for('static', filename='renderPlotScript.js') }}"></script>
+
+    <!-- Button script -->
+    <script src="{{ url_for('static', filename='pcpButtonScript.js') }}"></script>
+
+    <!-- Data script -->
+    <script src="{{ url_for('static', filename='mdsDataScript.js') }}"></script>
+
+    <!-- Variable script -->
+    <script src="{{ url_for('static', filename='mdsVariableScript.js') }}"></script>
+
+    <!-- Plot script -->
+    <script src="{{ url_for('static', filename='pcpScript.js') }}"></script>
+
+    <!-- elbow plot script -->
+    <script src="{{ url_for('static', filename='elbowPlotScript.js') }}"></script>
+
+
+</body>
+
+</html>
