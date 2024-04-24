@@ -1,0 +1,85 @@
+html,
+body {
+    height: 100%;
+    /* Ensures the html and body occupy full height */
+    margin: 0;
+    padding: 0;
+    background-color: #141414;
+    color: #ffffff;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+.header {
+    background-color: #000000;
+    padding: 10px 20px;
+    height: 60px;
+    /* Height of the header */
+    display: flex;
+    justify-content: center;
+    /* Centers items horizontally */
+    align-items: center;
+    /* Aligns items vertically */
+    position: relative;
+    /* Needed for absolute positioning of year selector */
+}
+
+.header img {
+    height: 40px;
+}
+
+.year-selector {
+    position: absolute;
+    right: 20px;
+    top: 10px;
+}
+
+.year-button {
+    background-color: #e50914;
+    border: none;
+    color: white;
+    padding: 5px 10px;
+    margin: 0 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.year-button:hover,
+.year-button.active {
+    background-color: #b20710;
+}
+
+.dashboard-container {
+    height: calc(100% - 60px);
+    /* Adjusts for header height */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.dashboard-box {
+    background-color: #e50914;
+    padding: 15px;
+    margin: 5px;
+    flex-grow: 1;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.row {
+    margin: 0 -5px;
+}
+
+.col,
+.col-md-6,
+.col-md-3,
+.col-md-6 {
+    padding: 0 5px;
+}
+
+.dashboard-box h4 {
+    margin: 0;
+}
