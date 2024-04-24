@@ -14,6 +14,7 @@ import sys
 app = Flask(__name__)
 
 # Dataset file path
+# dataset = "finalData.csv"
 dataset = "modified_netflix_data.csv"
 
 # Class to hold graph data
@@ -51,6 +52,11 @@ dfroot = pd.read_csv(dataset)
 @app.route("/jsonify")
 def get_json_data():
     return jsonify(myData.data)
+
+# df = pd.read_csv(dataset,
+#                  usecols=[
+#                      "patents_log2", "citations_log2", "FamilyCitations_log2", "NFCitations_log2", "P01_log2", "P18_log2", "C01_log2", "C18_log2", "NFC01_log2", "NFC18_log2"
+#                  ])
 
 df = pd.read_csv(dataset,
                  usecols=[
@@ -141,10 +147,11 @@ data3 = df.copy()
 # Read PCP data for data
 def read_pcp_data(data, color_data):
     # cols = ["MC_Grade", "LS_Grade", "IPO_Year_encoded", "patents_log2", "citations_log2", "FamilyCitations_log2", "NFCitations_log2", "P01_log2", "P18_log2", "C01_log2", "C18_log2", "NFC01_log2", "NFC18_log2"]
-    cols = ["type","director","country","release_year","rating","duration","month_of_release","year_of_release"]
+    cols = ["type","director","country","release_year","rating","duration","month_of_release"]
     df = pd.read_csv(dataset, usecols=cols)
-    sampled_df = df.sample(n=10, random_state=42)    
     # df['color'] = color_data['color']
+    df['color'] = np.random.randint(0, 3, size=len(df))
+    sampled_df = df.sample(n=10, random_state=42) 
     return sampled_df.to_json(orient='records')
 
 e20Json = read_pcp_data(dataset, data2)
