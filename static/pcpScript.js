@@ -95,7 +95,7 @@ function appendLines(svg) {
         .enter()
         .append("path")
         .attr("d", linePath)
-        .style("stroke", function(data) {
+        .style("stroke", function (data) {
             return colorMap[data["color"]];
         });
 }
@@ -107,14 +107,14 @@ function appendAxes(svg, xScale) {
         .enter()
         .append("g")
         .attr("class", "f")
-        .attr("transform", function(data) {
+        .attr("transform", function (data) {
             return "translate(" + xScale(data.value) + ")";
         })
         .call(dragBehavior);
 
     g.append("g")
         .attr("class", "axis")
-        .each(function(data) {
+        .each(function (data) {
             d3.select(this).call(d3.axisLeft().scale(data.range_value));
         })
         .append("text")
@@ -122,7 +122,7 @@ function appendAxes(svg, xScale) {
         .attr("y", -25)
         .style("fill", "black")
         .style("font-size", 10)
-        .text(function(data) {
+        .text(function (data) {
             return data.value;
         });
 }
@@ -145,7 +145,7 @@ function appendLines(svg, xScale) {
         .enter()
         .append("path")
         .attr("d", linePath)
-        .style("stroke", function(data) {
+        .style("stroke", function (data) {
             return colorMap[data["color"]];
         });
 }
@@ -155,7 +155,7 @@ function appendBrushes(svg) {
         .selectAll(".f")
         .append("g")
         .attr("class", "brush")
-        .each(function(data) {
+        .each(function (data) {
             d3.select(this).call(createBrush(data.range_value));
         })
         .selectAll("rect")
@@ -164,42 +164,31 @@ function appendBrushes(svg) {
 }
 
 function createBrush(range_value) {
-    return d3
-        .brushY()
-        .extent([
-            [-10, 0],
-            [10, height],
-        ])
-        .on("brush", function() {
-            slider(svg);
-        })
-        .on("end", function() {
-            slider(svg);
-        });
+    return d3.brushY()
+        .extent([[-10, 0], [10, height]])
+        .on("brush", (event) => slider(event, svg))
+        .on("end", (event) => slider(event, svg));
 }
 
-const dragBehavior = d3
-    .drag()
-    .on("start", dragStart)
-    .on("drag", dragMove)
-    .on("end", dragEnd);
+const dragBehavior = d3.drag()
+    .on("start", (event, d) => dragStart(event, d))
+    .on("drag", (event, d) => dragMove(event, d))
+    .on("end", (event, d) => dragEnd(event, d));
 
-function slider(svg) {
-    var dat = getData(svg);
+
+function slider(event, svg) {
+    var dat = getData(event, svg);
     updateDisplay(dat);
 }
 
-function getData(svg) {
+function getData(event, svg) {
     var data = [];
-    svg
-        .selectAll(".brush")
-        .filter(function(d) {
-            return d3.brushSelection(this);
-        })
-        .each(function(k) {
+    svg.selectAll(".brush")
+        .filter(function () { return d3.brushSelection(this); })
+        .each(function (d) {
             data.push({
-                f: k,
-                extent: d3.brushSelection(this),
+                f: d,
+                extent: d3.brushSelection(this)
             });
         });
     return data;
@@ -209,46 +198,31 @@ function updateDisplay(data) {
     if (data.length === 0) {
         line_2.style("display", null);
     } else {
-        line_2.style("display", function(d) {
-            return data.every(function(obj) {
-                    return (
-                        obj.extent[0] <= obj.f.range_value(d[obj.f.value]) &&
-                        obj.f.range_value(d[obj.f.value]) <= obj.extent[1]
-                    );
-                }) ?
-                null :
-                "none";
+        line_2.style("display", d => {
+            return data.every(obj => obj.extent[0] <= obj.f.range_value(d[obj.f.value]) && obj.f.range_value(d[obj.f.value]) <= obj.extent[1]) ? null : "none";
         });
     }
 }
 
-function dragStart(data) {
+function dragStart(event, data) {
     ordering[data.value] = x(data.value);
     line_1.attr("visibility", "hidden");
 }
 
-function dragMove(data) {
-    ordering[data.value] = Math.min(width, Math.max(0, d3.event.x));
+function dragMove(event, data) {
+    ordering[data.value] = Math.min(width, Math.max(0, event.x));
     line_2.attr("d", linePath);
-    pcpDataDim.sort(function(a, b) {
+    pcpDataDim.sort(function (a, b) {
         return plot(a) - plot(b);
     });
-    x.domain(
-        pcpDataDim.map(function(data) {
-            return data.value;
-        })
-    );
-    g.attr("transform", function(data) {
-        return "translate(" + plot(data) + ")";
-    });
+    x.domain(pcpDataDim.map(d => d.value));
+    g.attr("transform", d => "translate(" + plot(d) + ")");
 }
 
-function dragEnd(data) {
+
+function dragEnd(event, data) {
     delete ordering[data.value];
-    axisAdjustment(d3.select(this)).attr(
-        "transform",
-        "translate(" + x(data.value) + ")"
-    );
+    axisAdjustment(d3.select(this)).attr("transform", "translate(" + x(data.value) + ")");
     axisAdjustment(line_2).attr("d", linePath);
     line_1
         .attr("d", linePath)
@@ -257,7 +231,6 @@ function dragEnd(data) {
         .delay(400)
         .duration(0);
 }
-
 // Method to calculate line path
 function linePath(data) {
     const pathData = pcpDataDim.map((f) => {

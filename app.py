@@ -12,6 +12,7 @@ from sklearn.preprocessing import StandardScaler
 import sys
 import ast
 from fuzzywuzzy import process
+# from django.http import JsonResponse
 
 app = Flask(__name__)
 CORS(app)
@@ -24,6 +25,11 @@ dataset = "modified_netflix_data.csv"
 #     data = None
 
 # myData = MyData()
+
+# df = pd.read_csv(dataset,
+#                  usecols=[
+#                      "show_id","type","title","director","cast","country","date_added","release_year","rating","duration","listed_in","description","month_of_release","year_of_release"
+#                  ])
 
 def load_geojson_countries(geojson_path):
     with open(geojson_path, 'r') as f:
@@ -67,6 +73,8 @@ def load_data():
 # Read dataset
 # dfroot = pd.read_csv(dataset)
 data = load_data()
+# data2 = df.copy()
+# data3 = df.copy()
 
 # Selecting relevant columns from the dataset
 # df0 = dfroot[["patents_log2", "citations_log2", "FamilyCitations_log2", "NFCitations_log2", "P01_log2", "P18_log2", "C01_log2", "C18_log2", "NFC01_log2", "NFC18_log2"]]
@@ -111,6 +119,7 @@ data = load_data()
 
 @app.route('/data')
 def get_data():
+
     return jsonify(data)
 
 if __name__ == '__main__':
@@ -229,19 +238,21 @@ if __name__ == '__main__':
 # e1Json = pd.DataFrame(data=df, columns=['xVal', 'yVal', 'name']).to_json()
 
 # Read PCP data for data
-def read_pcp_data(data, color_data):
+def read_pcp_data():
     # cols = ["MC_Grade", "LS_Grade", "IPO_Year_encoded", "patents_log2", "citations_log2", "FamilyCitations_log2", "NFCitations_log2", "P01_log2", "P18_log2", "C01_log2", "C18_log2", "NFC01_log2", "NFC18_log2"]
     cols = ["type","director","country","release_year","rating","duration","month_of_release"]
     df = pd.read_csv(dataset, usecols=cols)
+    df = df.dropna(subset=['country','type','director','release_year','rating','duration','month_of_release'])
     # df['color'] = color_data['color']
-    df['color'] = np.random.randint(0, 3, size=len(df))
-    sampled_df = df.sample(n=10, random_state=42) 
-    return sampled_df.to_json(orient='records')
+    df['country'] = df['country'].apply(ast.literal_eval)
+    df['country'] = df['country'].apply(lambda x: x[0])
+    df['cluster'] = np.random.randint(0, 3, size=len(df))
+    df = df.sample(n=100, random_state=42)
+    return df
 
-e20Json = read_pcp_data(dataset, data2)
 # e21Json = read_pcp_data(dataset, data3)
 
-def read_word_cloud_data(data):
+def read_word_cloud_data():
     # cols = ["MC_Grade", "LS_Grade", "IPO_Year_encoded", "patents_log2", "citations_log2", "FamilyCitations_log2", "NFCitations_log2", "P01_log2", "P18_log2", "C01_log2", "C18_log2", "NFC01_log2", "NFC18_log2"]
     cols = ["description"]
     df = pd.read_csv(dataset, usecols=cols)
@@ -249,15 +260,15 @@ def read_word_cloud_data(data):
     return sampled_df.to_json(orient='records')
 
 
-eWordCloudJson = read_word_cloud_data(dataset)
+# eWordCloudJson = read_word_cloud_data(dataset)
 
 # Combine data
 # combined_data = {'elbowData': dictionary,'mdsData0':e00Json,'mdsData1':e01Json, 'mdsVariables': e1Json, 'pcp0': e20Json, 'pcp1': e21Json}
-combined_data = {'pcp0': e20Json, 'wordCloud': eWordCloudJson}
-combined_data_string = json.dumps(combined_data)
+# combined_data = {'pcp0': e20Json, 'wordCloud': eWordCloudJson}
+# combined_data_string = json.dumps(combined_data)
 
 # print('dict ', dictionary)
-print('server started')
+# print('server started')
 
 # @app.route('/combo')
 # def get_combo():
@@ -265,8 +276,12 @@ print('server started')
 #     Data = myData.data
 #     return render_template("combo.html", Data=Data)
 
-@app.route('/')
-def get_combo():
-    myData.data = json.loads(combined_data_string)
-    Data = myData.data
-    return render_template("dashboard.html", Data=Data)
+@app.route('/pcp_data')
+def get_pcp():
+    e20Json = read_pcp_data()
+    # eWordCloudJson = read_word_cloud_data()
+    # combined_data = {'pcp0': e20Json, 'wordCloud': eWordCloudJson}
+    return jsonify(e20Json.to_dict(orient='records'))
+    # myData.data = json.loads(combined_data_string)
+    # Data = myData.data
+    # return jsonify(combined_data)

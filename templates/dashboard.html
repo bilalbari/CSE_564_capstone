@@ -10,7 +10,7 @@
     <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
     <script src="https://d3js.org/d3-geo-projection.v2.min.js"></script>
     <script src="https://unpkg.com/topojson-client@3"></script>
-    <link rel="stylesheet" href="../styles/style.css">
+    <link rel="stylesheet" href="../static/styles/style.css">
 </head>
 
 <body>
@@ -51,10 +51,7 @@
             </div>
             <div class="col-md-6">
                 <div class="dashboard-box">
-                    <h4>Parallel Coordinates Plot</h4>
-                </div>
-                <div class="chart-container">
-                    <div id="pcpContainer"></div>
+                    <svg id="pcp_img" width="600" height="350"></svg>
                 </div>
             </div>
             <div class="col-md-3">
@@ -67,21 +64,25 @@
             </div>
         </div>
     </div>
-    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <!-- <script src="https://d3js.org/d3.v6.min.js"></script> -->
     <!-- Load d3.js -->
-    <script src="https://d3js.org/d3.v4.js"></script>
+    <!-- <script src="https://d3js.org/d3.v4.js"></script> -->
 
     <!-- Load d3-cloud -->
     <script src="https://cdn.jsdelivr.net/gh/holtzy/D3-graph-gallery@master/LIB/d3.layout.cloud.js"></script>
-
     <script src="../static/script.js"></script>
     <script src="../static/choropleth.js"></script>
+    <script src="../static/pcpplot2.js"></script>
+    <!-- <script src="https://d3js.org/d3.v4.js"></script>   -->
+    <!-- <script src="../static/pcpScript.js"></script> -->
+    <!-- <script src="../static/wordCloud.js"></script> -->
+    <!-- <script src="../static/renderPlotScript.js"></script> -->
     <!-- Render plot -->
-    <script src="{{ url_for('static', filename='renderPlotScript.js') }}"></script>
+    <!-- <script src="{{ url_for('static', filename='renderPlotScript.js') }}"></script> -->
     <!-- Render plot -->
-    <script src="{{ url_for('static', filename='wordCloud.js') }}"></script>
+    <!-- <script src="{{ url_for('static', filename='wordCloud.js') }}"></script> -->
     <!-- Plot script -->
-    <script src="{{ url_for('static', filename='pcpScript.js') }}"></script>
+    <!-- <script src="{{ url_for('static', filename='pcpScript.js') }}"></script> -->
 </body>
 
 </html>

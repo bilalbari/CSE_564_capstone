@@ -40,6 +40,7 @@ Promise.all([
     d3.json("http://127.0.0.1:5000/data")
 ]).then(([world, data]) => {
     const countries = world.features;
+    console.log("Countries:", countries);
     const svg = d3.select("#choropleth_img");
     const width = +svg.attr("width");
     const height = +svg.attr("height");

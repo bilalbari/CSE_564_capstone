@@ -2,7 +2,8 @@ let elbowPlotData, json_data, resultMdsData1, mdsVariable, resultPcp1;
 
 function renderPlot() {
     // Fetch data from server
-    d3.json("/jsonify", function(result) {
+    console.log("fetching data")
+    d3.json("http://127.0.0.1:5000/combined_data").then((result) => {
         console.log("result here: ", result);
 
         /*elbowPlotData = result.elbowData;
@@ -32,8 +33,8 @@ function renderPlot() {
         dataDim.forEach((f) => {
             f.range_value.domain(
                 f.data_type === "number" ?
-                d3.extent(json_data, (d) => +d[f.value]) :
-                json_data.map((d) => d[f.value]).sort()
+                    d3.extent(json_data, (d) => +d[f.value]) :
+                    Array.from(new Set(json_data.map((d) => d[f.value]))).sort()
             );
         });
         setPcpData(d);
@@ -45,7 +46,7 @@ function renderPlot() {
         var parsedData = JSON.parse(result.wordCloud);
 
         // Extract descriptions into sentences array
-        var sentences = parsedData.map(function(item) {
+        var sentences = parsedData.map(function (item) {
             return item.description;
         });
 
@@ -53,3 +54,9 @@ function renderPlot() {
         renderWordCloudPlot(sentences);
     });
 }
+
+document.addEventListener('DOMContentLoaded', (event) => {
+    // Call your function here
+    console.log("DOM fully loaded and parsed");
+    renderPlot();
+});
