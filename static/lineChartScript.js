@@ -4,58 +4,58 @@ function clearLineChartPlot() {
     container.innerHTML = "";
 }
 
-function renderLineChartPlot(data) {
+function renderLineChartPlot() {
+    updateChart();
+}
+
+// Function to handle dropdown change
+function updateChart() {
+    console.log("update chart called");
+
     clearLineChartPlot();
 
-    // data = [{
+    // var lineChartData = [{
     //         type: "Movie",
-    //         month_of_release: 12,
+    //         listed_in: "['Dramas', 'Independent Movies', 'International Movies']",
+    //         month_of_release: 9,
     //     },
     //     {
-    //         type: "Movie",
-    //         month_of_release: 12,
-    //     },
-    //     {
-    //         type: "Movie",
-    //         month_of_release: 3,
-    //     },
-    //     {
-    //         type: "Movie",
-    //         month_of_release: 12,
-    //     },
-    //     {
-    //         type: "Movie",
+    //         type: "TV Show",
+    //         listed_in: "['British TV Shows', 'Reality TV']",
     //         month_of_release: 9,
     //     },
     //     {
     //         type: "Movie",
-    //         month_of_release: 8,
+    //         listed_in: "['Comedies', 'Dramas']",
+    //         month_of_release: 9,
     //     },
     //     {
     //         type: "Movie",
-    //         month_of_release: 5,
+    //         listed_in: "['Dramas', 'International Movies']",
+    //         month_of_release: 9,
     //     },
     //     {
     //         type: "Movie",
-    //         month_of_release: 6,
-    //     },
-    //     {
-    //         type: "Movie",
-    //         month_of_release: 1,
-    //     },
-    //     {
-    //         type: "Movie",
-    //         month_of_release: 3,
+    //         listed_in: "['Comedies', 'International Movies', 'Romantic Movies']",
+    //         month_of_release: 9,
     //     },
     // ];
 
-    console.log(data);
+    var selectedOption = document.getElementById("lineDropdown").value;
 
-    // Grouping the data by type and month
+    console.log("selectedOption ", selectedOption);
+
+    // Grouping the data by type and selected key
     var groupedData = d3
         .nest()
         .key(function(d) {
-            return d.type;
+            if (selectedOption === "listed_in") {
+                var listedInArray = d[selectedOption].slice(2, -2).split("', '");
+                console.log("listedInArray ", listedInArray);
+                return listedInArray[0];
+            } else {
+                return d[selectedOption] || d.type;
+            }
         })
         .key(function(d) {
             return d.month_of_release;
@@ -63,9 +63,9 @@ function renderLineChartPlot(data) {
         .rollup(function(v) {
             return v.length;
         })
-        .entries(data);
+        .entries(lineChartData);
 
-    console.log("groupedData ", groupedData);
+    console.log("groupedData", groupedData);
 
     // Width and height of the chart
     var width = 675;
@@ -131,8 +131,8 @@ function renderLineChartPlot(data) {
         .append("path")
         .attr("class", "line")
         .attr("fill", "none")
-        .attr("stroke", function(d) {
-            return d.key === "Movie" ? "blue" : "red";
+        .attr("stroke", function(d, i) {
+            return d3.schemeCategory10[i];
         })
         .attr("stroke-width", 2)
         .attr("d", function(d) {
@@ -146,3 +146,5 @@ function renderLineChartPlot(data) {
             return line(lineData);
         });
 }
+
+d3.select("#lineDropdown").on("change", updateChart);

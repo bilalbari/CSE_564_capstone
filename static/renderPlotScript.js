@@ -1,5 +1,7 @@
 let elbowPlotData, json_data, resultMdsData1, mdsVariable, resultPcp1;
 
+var lineChartData;
+
 function renderPlot() {
     // Fetch data from server
     d3.json("/jsonify", function(result) {
@@ -7,18 +9,18 @@ function renderPlot() {
 
         /*elbowPlotData = result.elbowData;
 
-                                                                var mdsData = JSON.parse(result.mdsData0);
-                                                                resultMdsData1 = result.mdsData1;
-                                                                var currMdsData = { ...mdsData };
-                                                                delete currMdsData.zVal;
-                                                                plotMdsData(currMdsData);
+                                                                        var mdsData = JSON.parse(result.mdsData0);
+                                                                        resultMdsData1 = result.mdsData1;
+                                                                        var currMdsData = { ...mdsData };
+                                                                        delete currMdsData.zVal;
+                                                                        plotMdsData(currMdsData);
 
-                                                                var mdsVariablePlot = JSON.parse(result.mdsVariables);
-                                                                console.log("mdsVariablesData ", mdsVariablePlot);
+                                                                        var mdsVariablePlot = JSON.parse(result.mdsVariables);
+                                                                        console.log("mdsVariablesData ", mdsVariablePlot);
 
-                                                                mdsVariable = { ...mdsVariablePlot };
-                                                                delete mdsVariable.zVal;
-                                                                plotMdsVariable(mdsVariable);*/
+                                                                        mdsVariable = { ...mdsVariablePlot };
+                                                                        delete mdsVariable.zVal;
+                                                                        plotMdsVariable(mdsVariable);*/
 
         //plot lineChart
         // Parse the JSON string
@@ -26,32 +28,32 @@ function renderPlot() {
         renderLineChartPlot(lineChartData);
 
         // Plot pcp
-        console.log(result);
-        json_data = JSON.parse(result.pcp0);
-        resultPcp1 = result.pcp1;
-        console.log("pcpData ", json_data);
-        var d = json_data;
-        setDefaultValue(json_data);
-        // console.log("pcp array inital ", pcp);
+        /*console.log(result);
+            json_data = JSON.parse(result.pcp0);
+            resultPcp1 = result.pcp1;
+            console.log("pcpData ", json_data);
+            var d = json_data;
+            setDefaultValue(json_data);
+            // console.log("pcp array inital ", pcp);
 
-        dataDim.forEach((f) => {
-            f.range_value.domain(
-                f.data_type === "number" ?
-                d3.extent(json_data, (d) => +d[f.value]) :
-                json_data.map((d) => d[f.value]).sort()
-            );
-        });
-        setPcpData(d);
-        plotPcp();
+            dataDim.forEach((f) => {
+                f.range_value.domain(
+                    f.data_type === "number" ?
+                    d3.extent(json_data, (d) => +d[f.value]) :
+                    json_data.map((d) => d[f.value]).sort()
+                );
+            });
+            setPcpData(d);
+            plotPcp();
 
-        //plot word cloud
-        // Parse the JSON string
-        var parsedData = JSON.parse(result.wordCloud);
+            //plot word cloud
+            // Parse the JSON string
+            var parsedData = JSON.parse(result.wordCloud);
 
-        // Extract descriptions into sentences array
-        var sentences = parsedData.map(function(item) {
-            return item.description;
-        });
-        renderWordCloudPlot(sentences);
+            // Extract descriptions into sentences array
+            var sentences = parsedData.map(function(item) {
+                return item.description;
+            });
+            renderWordCloudPlot(sentences);*/
     });
 }
