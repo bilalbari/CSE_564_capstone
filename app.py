@@ -11,6 +11,7 @@ from sklearn import manifold
 from sklearn.preprocessing import StandardScaler
 import sys
 import ast
+from fuzzywuzzy import process
 
 app = Flask(__name__)
 CORS(app)
@@ -24,13 +25,40 @@ dataset = "modified_netflix_data.csv"
 
 # myData = MyData()
 
+def load_geojson_countries(geojson_path):
+    with open(geojson_path, 'r') as f:
+        data = json.load(f)
+    countries = [feature['properties']['name'] for feature in data['features']]
+    return countries
+
+def correct_country_names(data, country_list):
+    # Create a dictionary to map the original names to corrected names using fuzzy matching
+    name_mapping = {}
+    for original_name in data['country'].unique():
+        # Find the closest match in the country list with a minimum score
+        closest_match = process.extractOne(original_name, country_list,score_cutoff=80)
+        if closest_match and original_name != 'United States' and original_name != 'United Kingdom':
+            name_mapping[original_name] = closest_match[0]
+        elif original_name == 'United States':
+            name_mapping[original_name] = 'USA'
+        else:
+            name_mapping[original_name] = original_name
+
+    
+    print(name_mapping)
+    # Replace the country names in the dataset
+    data['country'] = data['country'].map(name_mapping)
+    return data
+
 def load_data():
+    geojson_countries = load_geojson_countries('world.geojson')
     df = pd.read_csv('modified_netflix_data.csv')
     # Drop rows with missing country data
     df = df.dropna(subset=['country'])
-    # Split the 'country' column into separate rows
     df['country'] = df['country'].apply(ast.literal_eval)
     df = df.explode('country')
+    df = correct_country_names(df, geojson_countries)
+    # Split the 'country' column into separate rows
     # Count the number of shows per country
     country_counts = df['country'].value_counts().reset_index()
     country_counts.columns = ['country', 'count']
