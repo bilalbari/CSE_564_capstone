@@ -70,8 +70,12 @@ data = load_data()
 
 # Selecting relevant columns from the dataset
 # df0 = dfroot[["patents_log2", "citations_log2", "FamilyCitations_log2", "NFCitations_log2", "P01_log2", "P18_log2", "C01_log2", "C18_log2", "NFC01_log2", "NFC18_log2"]]
+# df0 = dfroot[["patents_log2", "citations_log2", "FamilyCitations_log2", "NFCitations_log2", "P01_log2", "P18_log2", "C01_log2", "C18_log2", "NFC01_log2", "NFC18_log2"]]
 
 # Route for index page
+# @app.route("/")
+# def index():
+#     return render_template("index.html")
 # @app.route("/")
 # def index():
 #     return render_template("index.html")
@@ -84,8 +88,18 @@ data = load_data()
 #     print('kValue: ' + kValue)
 #     selected_k_value = int(kValue)
 #     return kValue
+# @app.route("/kValue", methods=["POST"])
+# def set_kValue():
+#     global selected_k_value
+#     kValue = request.form['kValue']
+#     print('kValue: ' + kValue)
+#     selected_k_value = int(kValue)
+#     return kValue
 
 # Route to get navigation bar
+# @app.route("/nav")
+# def get_nav():
+#     return render_template("navbar.html")
 # @app.route("/nav")
 # def get_nav():
 #     return render_template("navbar.html")
@@ -119,12 +133,36 @@ if __name__ == '__main__':
 #             name = row['Name']
 #             row_data = generate_row(columns)
 #             writer.writerow([symbol, name] + row_data)
+# def generate_csv(filename, dfroot, columns):
+#     with open(filename, 'w', newline='') as csvfile:
+#         writer = csv.writer(csvfile)
+#         # Write header row
+#         writer.writerow(['Symbol', 'Name'] + ['k' + str(i) for i in range(1, columns + 1)])
+#         # Generate data rows
+#         for index, row in dfroot.iterrows():
+#             symbol = row['Symbol']
+#             name = row['Name']
+#             row_data = generate_row(columns)
+#             writer.writerow([symbol, name] + row_data)
 
 # Function for min-max scaling
 # def min_max_scaling(value, min_val, max_val, new_min, new_max):
 #     return ((value - min_val) / (max_val - min_val)) * (new_max - new_min) + new_min
+# def min_max_scaling(value, min_val, max_val, new_min, new_max):
+#     return ((value - min_val) / (max_val - min_val)) * (new_max - new_min) + new_min
 
 # Start elbow plot
+# data = df0
+# mse = {}
+# for k in range(1, 11):
+#     kmeans = KMeans(n_clusters=k, max_iter=1000).fit(data)
+#     data["clusters"] = kmeans.labels_
+#     mse[k] = kmeans.inertia_
+# list_x = list(mse.keys())
+# list_y = list(mse.values())
+# min_val = min(list_y)
+# max_val = max(list_y)
+# scaled_list_y = [min_max_scaling(val, min_val, max_val, 0, 100) for val in list_y]
 # data = df0
 # mse = {}
 # for k in range(1, 11):
@@ -166,6 +204,8 @@ if __name__ == '__main__':
 
 # # Run KMeans clustering for data3
 # kmeans2_data = run_kmeans(data3, n_clusters=5)
+# # Run KMeans clustering for data3
+# kmeans2_data = run_kmeans(data3, n_clusters=5)
 
 # # TODO 559
 # def process_mds_data(data, scaler, sample_size=559):
@@ -188,25 +228,45 @@ if __name__ == '__main__':
 # df = np.hstack((mds_transformed, cluster_num.columns.to_numpy().reshape(10, 1)))
 # e1Json = pd.DataFrame(data=df, columns=['xVal', 'yVal', 'name']).to_json()
 
-# # Read PCP data for data
-# def read_pcp_data(data, color_data):
-#     cols = ["MC_Grade", "LS_Grade", "IPO_Year_encoded", "patents_log2", "citations_log2", "FamilyCitations_log2", "NFCitations_log2", "P01_log2", "P18_log2", "C01_log2", "C18_log2", "NFC01_log2", "NFC18_log2"]
-#     df = pd.read_csv(dataset, usecols=cols)
-#     df['color'] = color_data['color']
-#     return df.to_json(orient='records')
+# Read PCP data for data
+def read_pcp_data(data, color_data):
+    # cols = ["MC_Grade", "LS_Grade", "IPO_Year_encoded", "patents_log2", "citations_log2", "FamilyCitations_log2", "NFCitations_log2", "P01_log2", "P18_log2", "C01_log2", "C18_log2", "NFC01_log2", "NFC18_log2"]
+    cols = ["type","director","country","release_year","rating","duration","month_of_release"]
+    df = pd.read_csv(dataset, usecols=cols)
+    # df['color'] = color_data['color']
+    df['color'] = np.random.randint(0, 3, size=len(df))
+    sampled_df = df.sample(n=10, random_state=42) 
+    return sampled_df.to_json(orient='records')
 
-# e20Json = read_pcp_data(dataset, data2)
+e20Json = read_pcp_data(dataset, data2)
 # e21Json = read_pcp_data(dataset, data3)
 
-# # Combine data
+def read_word_cloud_data(data):
+    # cols = ["MC_Grade", "LS_Grade", "IPO_Year_encoded", "patents_log2", "citations_log2", "FamilyCitations_log2", "NFCitations_log2", "P01_log2", "P18_log2", "C01_log2", "C18_log2", "NFC01_log2", "NFC18_log2"]
+    cols = ["description"]
+    df = pd.read_csv(dataset, usecols=cols)
+    sampled_df = df.sample(n=100, random_state=42) 
+    return sampled_df.to_json(orient='records')
+
+
+eWordCloudJson = read_word_cloud_data(dataset)
+
+# Combine data
 # combined_data = {'elbowData': dictionary,'mdsData0':e00Json,'mdsData1':e01Json, 'mdsVariables': e1Json, 'pcp0': e20Json, 'pcp1': e21Json}
-# combined_data_string = json.dumps(combined_data)
+combined_data = {'pcp0': e20Json, 'wordCloud': eWordCloudJson}
+combined_data_string = json.dumps(combined_data)
 
 # print('dict ', dictionary)
-# print('server started')
+print('server started')
 
 # @app.route('/combo')
 # def get_combo():
 #     myData.data = json.loads(combined_data_string)
 #     Data = myData.data
 #     return render_template("combo.html", Data=Data)
+
+@app.route('/')
+def get_combo():
+    myData.data = json.loads(combined_data_string)
+    Data = myData.data
+    return render_template("dashboard.html", Data=Data)
