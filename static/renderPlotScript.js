@@ -7,18 +7,23 @@ function renderPlot() {
 
         /*elbowPlotData = result.elbowData;
 
-                                                    var mdsData = JSON.parse(result.mdsData0);
-                                                    resultMdsData1 = result.mdsData1;
-                                                    var currMdsData = { ...mdsData };
-                                                    delete currMdsData.zVal;
-                                                    plotMdsData(currMdsData);
+                                                                var mdsData = JSON.parse(result.mdsData0);
+                                                                resultMdsData1 = result.mdsData1;
+                                                                var currMdsData = { ...mdsData };
+                                                                delete currMdsData.zVal;
+                                                                plotMdsData(currMdsData);
 
-                                                    var mdsVariablePlot = JSON.parse(result.mdsVariables);
-                                                    console.log("mdsVariablesData ", mdsVariablePlot);
+                                                                var mdsVariablePlot = JSON.parse(result.mdsVariables);
+                                                                console.log("mdsVariablesData ", mdsVariablePlot);
 
-                                                    mdsVariable = { ...mdsVariablePlot };
-                                                    delete mdsVariable.zVal;
-                                                    plotMdsVariable(mdsVariable);*/
+                                                                mdsVariable = { ...mdsVariablePlot };
+                                                                delete mdsVariable.zVal;
+                                                                plotMdsVariable(mdsVariable);*/
+
+        //plot lineChart
+        // Parse the JSON string
+        lineChartData = JSON.parse(result.lineChart);
+        renderLineChartPlot(lineChartData);
 
         // Plot pcp
         console.log(result);
@@ -40,7 +45,6 @@ function renderPlot() {
         plotPcp();
 
         //plot word cloud
-
         // Parse the JSON string
         var parsedData = JSON.parse(result.wordCloud);
 
@@ -48,8 +52,6 @@ function renderPlot() {
         var sentences = parsedData.map(function(item) {
             return item.description;
         });
-
-        console.log(sentences);
         renderWordCloudPlot(sentences);
     });
 }
