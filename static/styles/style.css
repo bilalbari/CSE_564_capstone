@@ -134,3 +134,15 @@ svg {
     background-color: white;
     margin: 20px;
 }
+
+.lineDropdown {
+    padding: 4px 12px;
+    font-size: 16px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    color: #333;
+    outline: none;
+    cursor: pointer;
+    margin-left: 465px;
+}
