@@ -4,14 +4,14 @@ body {
     margin: 0;
     padding: 0;
     background-color: #141414;
-    color: #ffffff;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: #000
 }
 
 .header {
     background-color: #000000;
     padding: 10px 20px;
-    height: 60px;
+    height: 45px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -45,7 +45,7 @@ body {
 }
 
 .dashboard-container {
-    height: calc(100% - 60px);
+
     /* Adjusts for header height */
     display: flex;
     flex-direction: column;
@@ -67,6 +67,7 @@ path {
     display: flex;
     align-items: center;
     justify-content: center;
+    text-decoration-color: #000;
 }
 
 .row {
