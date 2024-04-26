@@ -35,17 +35,16 @@
             </div>
             <div class="col-md-6">
                 <div class="dashboard-box">
-                    <h4>Line Chart</h4>
-                    <div>
-                        <select id="lineDropdown" class="lineDropdown">
-                            <option value="type">Type</option>
-                            <option value="listed_in">Listed In</option>
-                        </select>
-                    </div>
+                    <!-- <div> -->
+                    <!-- <label for="dataChoice">Choose data:</label>
+                    <select id="dataChoice">
+                        <option value="type">Type</option>
+                        <option value="listed_in">Listed In</option>
+                    </select> -->
+                    <!-- </div> -->
+                    <svg id="lineChart" width="900" height="425"></svg>
                 </div>
-                <div class="chart-container">
-                    <div id="lineChartContainer"></div>
-                </div>
+
             </div>
         </div>
         <div class="row flex-grow-1">
@@ -75,6 +74,7 @@
     <script src="../static/script.js"></script>
     <script src="../static/choropleth.js"></script>
     <script src="../static/pcpplot2.js"></script>
+    <script src="../static/lineChartNew.js"></script>
     <!-- <script src="https://d3js.org/d3.v4.js"></script>   -->
     <!-- <script src="../static/pcpScript.js"></script> -->
     <!-- <script src="../static/wordCloud.js"></script> -->

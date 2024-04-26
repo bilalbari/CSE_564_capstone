@@ -8,6 +8,24 @@ body {
     color: #000
 }
 
+.line {
+    fill: none;
+    stroke: steelblue;
+    stroke-width: 2px;
+}
+
+.tooltip {
+    position: absolute;
+    text-align: center;
+    padding: 8px;
+    font: 12px sans-serif;
+    background: white;
+    border: 1px solid lightgray;
+    border-radius: 8px;
+    pointer-events: none;
+    opacity: 0.9;
+}
+
 .header {
     background-color: #000000;
     padding: 10px 20px;

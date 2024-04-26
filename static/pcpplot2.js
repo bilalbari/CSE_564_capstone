@@ -86,7 +86,7 @@ function pcpplot2() {
             .attr("d", path)
             .attr("fill", "none")
             .style("stroke", d => {
-                console.log(color(d.cluster));
+                // console.log(color(d.cluster));
                 return color(d.cluster);
             })
             .style("stroke-opacity", 0.5)

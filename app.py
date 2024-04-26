@@ -237,15 +237,16 @@ if __name__ == '__main__':
 # df = np.hstack((mds_transformed, cluster_num.columns.to_numpy().reshape(10, 1)))
 # e1Json = pd.DataFrame(data=df, columns=['xVal', 'yVal', 'name']).to_json()
 
-
-def read_line_chart_data(data):
+@app.route('/line_chart')
+def read_line_chart_data():
     # cols = ["MC_Grade", "LS_Grade", "IPO_Year_encoded", "patents_log2", "citations_log2", "FamilyCitations_log2", "NFCitations_log2", "P01_log2", "P18_log2", "C01_log2", "C18_log2", "NFC01_log2", "NFC18_log2"]
     cols = ["type", "listed_in", "month_of_release"]
     df = pd.read_csv(dataset, usecols=cols)
+    df = df.dropna(subset=['type','listed_in','month_of_release'])
     # sampled_df = df.sample(n=100, random_state=41) 
-    return df.to_json(orient='records')
+    return jsonify(df.to_dict(orient='records'))
 
-eLineChartJson = read_line_chart_data(dataset)
+# eLineChartJson = read_line_chart_data(dataset)
 
 # Read PCP data for data
 def read_pcp_data():

@@ -57,7 +57,7 @@ Promise.all([
         .join("path")
         .attr("d", pathGenerator)
         .attr("fill", d => {
-            console.log("Rendering country:", d.properties.name);
+            // console.log("Rendering country:", d.properties.name);
             const count = dataMap.get(d.properties.name);
             return count ? colorScale(count) : "#ccc";
         })
