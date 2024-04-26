@@ -52,10 +52,15 @@ body {
     justify-content: space-between;
 }
 
+path {
+    stroke: #000000;
+    stroke-width: 0.5;
+}
+
 .dashboard-box {
-    background-color: #e50914;
-    padding: 5px;
-    /* margin: 5px; */
+    background-color: #ffffff;
+    padding: 15px;
+    margin: 5px;
     flex-grow: 1;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -85,11 +90,26 @@ svg {
 }
 
 .axis text {
-    text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff;
-    cursor: grab;
+    fill: black;
+    stroke-width: 1.5px;
+    /* Bolder axis text */
 }
 
-.line1 path {
+.axis line,
+.axis path {
+    stroke: #000;
+    /* Darker and bolder ticks */
+    stroke-width: 1.5px;
+    /* Thicker lines for ticks */
+}
+
+.brush .extent {
+    fill-opacity: 0.3;
+    stroke: #fff;
+    shape-rendering: crispEdges;
+}
+
+/* .line1 path {
     fill: none;
     stroke: rgb(226, 224, 224);
     shape-rendering: crispEdges;
@@ -98,7 +118,7 @@ svg {
 .line2 path {
     fill: none;
     stroke: rgb(61, 113, 155);
-}
+} */
 
 .chart-container {
     height: 265px;
