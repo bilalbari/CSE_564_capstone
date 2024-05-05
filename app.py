@@ -122,9 +122,6 @@ def get_data():
 
     return jsonify(data)
 
-if __name__ == '__main__':
-    app.run(debug=True)
-
 # df = pd.read_csv(dataset,
 #                  usecols=[
 #                      "patents_log2", "citations_log2", "FamilyCitations_log2", "NFCitations_log2", "P01_log2", "P18_log2", "C01_log2", "C18_log2", "NFC01_log2", "NFC18_log2"
@@ -243,10 +240,35 @@ def read_line_chart_data():
     cols = ["type", "listed_in", "month_of_release"]
     df = pd.read_csv(dataset, usecols=cols)
     df = df.dropna(subset=['type','listed_in','month_of_release'])
+    df['listed_in'] = df['listed_in'].apply(ast.literal_eval)
     # sampled_df = df.sample(n=100, random_state=41) 
     return jsonify(df.to_dict(orient='records'))
 
-# eLineChartJson = read_line_chart_data(dataset)
+def preprocess_data(column_name):
+    df = pd.read_csv(dataset)
+    if column_name in ['country', 'listed_in','cast']:  # Add any other columns that contain lists
+        # Assume the lists are stored as string and separated by comma
+        df[column_name] = df[column_name].apply(ast.literal_eval)   
+        # Explode the DataFrame to separate the lists into individual rows
+        exploded_df = df.explode(column_name)
+        return exploded_df
+    else:
+        return df
+
+@app.route('/ratings',methods=['GET'])
+def get_average_rating():
+    group_by_column = request.args.get('group_by_column')
+    df = preprocess_data(group_by_column)
+    if group_by_column not in df.columns:
+        return jsonify({'error': 'Invalid group by column'}), 400
+    
+    grouped_data = df.groupby(group_by_column)['rating'].mean().reset_index()
+    
+    # Convert the grouped data to JSON
+    result = grouped_data.to_json(orient='records')
+    
+    return result
+
 
 # Read PCP data for data
 def read_pcp_data():
@@ -296,3 +318,6 @@ def get_pcp():
     # myData.data = json.loads(combined_data_string)
     # Data = myData.data
     # return jsonify(combined_data)
+
+if __name__ == '__main__':
+    app.run(debug=True)

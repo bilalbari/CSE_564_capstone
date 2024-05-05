@@ -58,15 +58,16 @@ d3.json('http://127.0.0.1:5000/line_chart').then(function (rawData) {
         .text(d => d)
         .attr("value", d => d);
     // Initial setup: process data and render the default line chart
-    const processedData = processData(rawData, 'listed_in');
+    const processedData = processData(rawData, 'listed_in').slice(0, 6);
     console.log(processedData)
     updateLineChart(processedData);
 
     // Setup the dropdown change event listener
     d3.select('#dataChoice').on('change', function () {
         const selectedCategory = d3.select(this).property('value');
-        const processedData = processData(rawData, selectedCategory);
+        const processedData = processData(rawData, selectedCategory).slice(0, 6);
         updateLineChart(processedData);
+        updateChart(selectedCategory);
     });
 }).catch(error => {
     console.error('Error fetching the data:', error);
@@ -74,9 +75,10 @@ d3.json('http://127.0.0.1:5000/line_chart').then(function (rawData) {
 
 function processData(rawData, attribute) {
     // Convert 'listed_in' to use the first genre and process dates
+    // console.log(rawData)
     const data = rawData.map(d => ({
         ...d,
-        listed_in: d.listed_in.replace(/[\[\]']+/g, "").split(", ")[0],
+        listed_in: d.listed_in[0],
         month_of_release: +d.month_of_release
     }));
 
@@ -107,6 +109,7 @@ function updateLineChart(data) {
         .attr("class", "line")
         .attr("d", d => line(d.values))
         .style("stroke", (d, i) => color(i))
+        .style("stroke-width", 4)
         .on("mouseover", (event, d) => {
             tooltip.html(d.key)
                 .style("visibility", "visible")
@@ -117,7 +120,9 @@ function updateLineChart(data) {
             tooltip.style("left", (event.pageX + 10) + "px")
                 .style("top", (event.pageY - 10) + "px");
         })
-        .on("mouseout", () => tooltip.style("visibility", "hidden"));
+        .on("mouseout", () => {
+            tooltip.style("visibility", "hidden");
+        });
 
     lines.exit().remove();
 }

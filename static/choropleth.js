@@ -30,6 +30,7 @@ function createLegend(scale, height) {
         .attr("x", xOffset + legendItemSize + 5)
         .attr("y", yOffset + legendItemSize / 2)
         .attr("dy", "0.35em")
+        .style("stroke", "white")
         .text(d => d);
 
     return legend;
@@ -67,14 +68,14 @@ Promise.all([
                 .duration(300)
                 .style('fill-opacity', 0.5)
                 .style('stroke', 'black')
-                .style('stroke-width', 2);
+                .style('stroke-width', 5);
         })
         .on('mouseout', function (event, d) {
             d3.select(this)
                 .transition()
                 .duration(300)
                 .style('fill-opacity', 1)
-                .style('stroke', 'black')
+                .style('stroke', 'white')
                 .style('stroke-width', 0.5);
         });
 
