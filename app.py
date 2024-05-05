@@ -311,6 +311,7 @@ def read_full_data():
     cols = ["type","director","country","release_year","rating","duration","month_of_release", "description", "cast"]
     df = pd.read_csv(dataset, usecols=cols)
     df = df.dropna(subset=["type","director","country","release_year","rating","duration","month_of_release", "description", "cast"])
+    df = df.sample(n=100, random_state=42)
     return df
 
 @app.route('/fullData')

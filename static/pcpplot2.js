@@ -139,47 +139,6 @@ function pcpplot2() {
         });
       const axis = d3.axisLeft();
 
-      // function brushed(dimension) {
-      //     return (event) => {
-      //         const selection = event.selection;
-      //         if (!selection) {
-      //             g.selectAll("path").style("opacity", 0.5); // Reset opacity if brush is cleared
-      //             return;
-      //         }
-
-      //         const [y0, y1] = selection;
-
-      //         console.log(dimension);
-
-      //         g.selectAll("path")
-      //             .style("opacity", 0.1); // Initially dim all paths
-
-      //         g.selectAll("path").filter(function (d) {
-      //             if (d === null || d === undefined) {
-      //                 return false;
-      //             }
-      //             // console.log(d);
-      //             // console.log(dimension);
-
-      //             // Safely access the data properties within the bound data 'd'
-      //             const val = d[dimension];
-      //             // console.log(val);
-      //             if (val !== null && val !== undefined) {
-      //                 const scaledVal = scales[dimension](val); // Scale the data value to compare with brush coords
-      //                 return scaledVal >= y0 && scaledVal <= y1;
-      //             }
-      //             return false;
-      //         })
-      //             .style("opacity", 1)
-      //     };
-      // }
-
-      // function brushEnded(event) {
-      //   if (!event.selection) {
-      //     g.selectAll("path").style("opacity", 0.5);
-      //   }
-      // }
-
       function brushed(dimension) {
         return (event) => {
           const selection = event.selection;
