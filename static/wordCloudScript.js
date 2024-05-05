@@ -5,15 +5,15 @@ function plotWordCloud() {
     .then(function (data) {
       console.log("new word cloud mainData ", data);
       wordCloudMainData = data;
+      // const dataField = document.getElementById("dataChoice").value;
       updateWordCloud();
     })
     .catch((error) => console.error("Error fetching or parsing data:", error));
 }
 
 function updateWordCloud() {
-  const dataField = document.getElementById("dataFieldSelector").value;
+  const dataField = document.getElementById("dataChoiceNew").value;
   console.log("Selected field for word cloud: ", dataField);
-
   let texts; // This will hold an array of text elements to process
   let topHowMany = 10;
   if (dataField === "description") {
@@ -84,7 +84,8 @@ function tokenize(text) {
 }
 
 function drawWordCloud(words) {
-  d3.select("#wcloud svg").remove(); // Clear previous SVG
+  const svg = d3.select("#wcloud");
+  svg.selectAll("g").remove(); // Clear previous SVG
   const colorThresholds = { large: 25, medium: 18 };
   const colors = { large: "#ff6347", medium: "#4682b4", small: "#3cb371" };
 
@@ -96,18 +97,13 @@ function drawWordCloud(words) {
 
   var layout = d3.layout
     .cloud()
-    .size([335, 300])
+    .size([320, 330])
     .words(words)
     .padding(5)
     .rotate(0)
     .font("Impact")
     .fontSize((d) => d.size)
     .on("end", function (drawnWords) {
-      const svg = d3
-        .select("#wcloud")
-        .append("svg")
-        .attr("width", 335)
-        .attr("height", 300);
 
       const group = svg.append("g").attr("transform", "translate(167.5,150)");
       group
@@ -121,14 +117,36 @@ function drawWordCloud(words) {
         .attr("text-anchor", "middle")
         .attr("transform", (d) => `translate(${d.x}, ${d.y})`)
         .text((d) => d.text);
+
+
     });
 
   layout.start();
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  const svg = d3.select("#wcloud");
+  const select = svg.append("foreignObject")
+    .attr("width", 80)
+    .attr("height", 30)
+    .attr("x", 335 - 100)
+    .attr("y", 0)
+    .append("xhtml:select")
+    .attr("id", "dataChoiceNew");
+
+  const attributes = ['description', 'cast', 'director']; // Example attributes
+
+  select.selectAll("option")
+    .data(attributes)
+    .enter()
+    .append("option")
+    .text(d => d)
+    .attr("value", d => d);
+
+
   document
-    .getElementById("dataFieldSelector")
+    .getElementById("dataChoiceNew")
     .addEventListener("change", updateWordCloud);
+
   plotWordCloud(); // Initial plot
 });
