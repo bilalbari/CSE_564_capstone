@@ -9,6 +9,9 @@
     <script src="https://d3js.org/d3.v6.js"></script>
     <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
     <script src="https://d3js.org/d3-geo-projection.v2.min.js"></script>
+    <!-- Include d3-cloud using Jason Davies' version -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/d3-cloud/build/d3.layout.cloud.js"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-cloud/1.2.5/d3.layout.cloud.js"></script>
     <script src="https://unpkg.com/topojson-client@3"></script>
     <link rel="stylesheet" href="../static/styles/style.css">
 </head>
@@ -63,23 +66,30 @@
             </div>
             <div class="col-md-3">
                 <div class="dashboard-box">
-                    <h4>Word Cloud</h4>
-                </div>
-                <div class="small-chart-container">
-                    <div id="wordCloudContainer"></div>
+                    <!-- <h4>Word Cloud</h4> -->
+                    <!-- <svg id="wordCloudContainer" width="600" height="350"></svg> -->
+                    <div id="wcloud"></div>
+
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- <script src="../static/testScript.js"></script> -->
+
     <!-- <script src="https://d3js.org/d3.v6.min.js"></script> -->
     <!-- Load d3.js -->
     <!-- <script src="https://d3js.org/d3.v4.js"></script> -->
 
     <!-- Load d3-cloud -->
-    <script src="https://cdn.jsdelivr.net/gh/holtzy/D3-graph-gallery@master/LIB/d3.layout.cloud.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/gh/holtzy/D3-graph-gallery@master/LIB/d3.layout.cloud.js"></script> -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-cloud/1.2.5/d3.layout.cloud.min.js"></script> -->
+
     <script src="../static/script.js"></script>
     <script src="../static/choropleth.js"></script>
     <script src="../static/pcpplot2.js"></script>
+    <script src="../static/stopWords.js"></script>
+    <script src="../static/wordCloudScript.js"></script>
     <!-- <script src="https://d3js.org/d3.v4.js"></script>   -->
     <!-- <script src="../static/pcpScript.js"></script> -->
     <!-- <script src="../static/wordCloud.js"></script> -->
