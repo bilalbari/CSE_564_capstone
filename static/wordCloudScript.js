@@ -1,33 +1,37 @@
-let wordCloudMainData;
+let currentWordCloudData;
 
 function plotWordCloud() {
   d3.json(`http://127.0.0.1:5000/word_cloud_data`)
     .then(function (data) {
       console.log("new word cloud mainData ", data);
-      wordCloudMainData = data;
-      updateWordCloud();
+      currentWordCloudData = data;
+      updateWordCloud(currentWordCloudData);
     })
     .catch((error) => console.error("Error fetching or parsing data:", error));
 }
 
 function updateWordCloud() {
+  console.log(
+    "received data for population in word cloud",
+    currentWordCloudData
+  );
   const dataField = document.getElementById("dataFieldSelector").value;
   console.log("Selected field for word cloud: ", dataField);
 
   let texts; // This will hold an array of text elements to process
   let topHowMany = 10;
   if (dataField === "description") {
-    texts = wordCloudMainData.map((item) => item.description);
+    texts = currentWordCloudData.map((item) => item.description);
     topHowMany = 25;
   } else if (dataField === "cast") {
     // Parse the pseudo-array format for cast
-    texts = wordCloudMainData.flatMap((item) =>
+    texts = currentWordCloudData.flatMap((item) =>
       item.cast.slice(2, -2).split("', '")
     );
   } else if (dataField === "director") {
     // Directly use the director's name
-    // texts = wordCloudMainData.map((item) => item.director);
-    texts = wordCloudMainData.flatMap((item) =>
+    // texts = data.map((item) => item.director);
+    texts = currentWordCloudData.flatMap((item) =>
       item.director.split(",").map((name) => name.trim())
     );
   }
@@ -60,9 +64,13 @@ function updateWordCloud() {
 
   // Function to scale sizes to a new range
   function scaleSize(oldSize, oldMin, oldMax, newMin, newMax) {
-    return (
-      ((newMax - newMin) * (oldSize - oldMin)) / (oldMax - oldMin) + newMin
-    );
+    if (oldMax == oldMin || oldSize == oldMin || newMax == newMin) {
+      return 20;
+    }
+    var newScaledSize =
+      ((newMax - newMin) * (oldSize - oldMin)) / (oldMax - oldMin) + newMin;
+    // console.log("newScaledSize ", newScaledSize);
+    return newScaledSize;
   }
 
   // Scale the sizes in the formattedTopWords

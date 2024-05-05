@@ -304,3 +304,16 @@ def get_word_cloud_data():
     # myData.data = json.loads(combined_data_string)
     # Data = myData.data
     # return jsonify(combined_data)
+
+
+
+def read_full_data():
+    cols = ["type","director","country","release_year","rating","duration","month_of_release", "description", "cast"]
+    df = pd.read_csv(dataset, usecols=cols)
+    df = df.dropna(subset=["type","director","country","release_year","rating","duration","month_of_release", "description", "cast"])
+    return df
+
+@app.route('/fullData')
+def get_full_data():
+    e20Json = read_full_data()
+    return jsonify(e20Json.to_dict(orient='records'))
