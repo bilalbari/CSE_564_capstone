@@ -264,7 +264,7 @@ def read_pcp_data():
 
 def read_word_cloud_data():
     # cols = ["MC_Grade", "LS_Grade", "IPO_Year_encoded", "patents_log2", "citations_log2", "FamilyCitations_log2", "NFCitations_log2", "P01_log2", "P18_log2", "C01_log2", "C18_log2", "NFC01_log2", "NFC18_log2"]
-    cols = ["description"]
+    cols = ["description", "director", "cast"]
     df = pd.read_csv(dataset, usecols=cols)
     return df
 
