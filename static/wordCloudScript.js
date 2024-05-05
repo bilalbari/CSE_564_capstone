@@ -134,6 +134,7 @@ function plotWordCloud() {
           })
           //   .style("fill", "#000") // Color of the text
           .style("fill", (d) => getColor(d.size)) // Assign color based on size
+          .style("font-weight", "bold") // Make text bold
           .attr("text-anchor", "middle")
           .attr("transform", function (d) {
             return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
