@@ -36,57 +36,60 @@ function createLegend(scale, height) {
     return legend;
 }
 
-Promise.all([
-    d3.json("../world.geojson"),
-    d3.json("http://127.0.0.1:5000/data")
-]).then(([world, data]) => {
-    const countries = world.features;
-    console.log("Countries:", countries);
-    const svg = d3.select("#choropleth_img");
-    const width = +svg.attr("width");
-    const height = +svg.attr("height");
+function updateChoro() {
+    Promise.all([
+        d3.json("../world.geojson"),
+        d3.json("http://127.0.0.1:5000/data")
+    ]).then(([world, data]) => {
+        const countries = world.features;
+        console.log("Countries:", countries);
+        const svg = d3.select("#choropleth_img");
+        svg.selectAll("*").remove(); // Clear previous renders
+        const width = +svg.attr("width");
+        const height = +svg.attr("height");
 
-    const projection = d3.geoNaturalEarth1()
-        .fitSize([width, height], world); // Assuming geojsonData contains your features
-    const pathGenerator = d3.geoPath().projection(projection);
-    const dataMap = new Map(data.map(item => [item.country, item.count]));
-    const colorScale = d3.scaleSequential(t => d3.interpolateReds(t * 0.8 + 0.2))
-        .domain([1, d3.max(data, d => d.count)]);
-    const g = svg.append("g")
-        .selectAll("path")
-        .data(countries)
-        .join("path")
-        .attr("d", pathGenerator)
-        .attr("fill", d => {
-            // console.log("Rendering country:", d.properties.name);
-            const count = dataMap.get(d.properties.name);
-            return count ? colorScale(count) : "#ccc";
-        })
-        .on('mouseover', function (event, d) {
-            d3.select(this)
-                .transition()
-                .duration(300)
-                .style('fill-opacity', 0.5)
-                .style('stroke', 'black')
-                .style('stroke-width', 5);
-        })
-        .on('mouseout', function (event, d) {
-            d3.select(this)
-                .transition()
-                .duration(300)
-                .style('fill-opacity', 1)
-                .style('stroke', 'white')
-                .style('stroke-width', 0.5);
-        });
+        const projection = d3.geoNaturalEarth1()
+            .fitSize([width, height], world); // Assuming geojsonData contains your features
+        const pathGenerator = d3.geoPath().projection(projection);
+        const dataMap = new Map(data.map(item => [item.country, item.count]));
+        const colorScale = d3.scaleSequential(t => d3.interpolateReds(t * 0.8 + 0.2))
+            .domain([1, d3.max(data, d => d.count)]);
+        const g = svg.append("g")
+            .selectAll("path")
+            .data(countries)
+            .join("path")
+            .attr("d", pathGenerator)
+            .attr("fill", d => {
+                // console.log("Rendering country:", d.properties.name);
+                const count = dataMap.get(d.properties.name);
+                return count ? colorScale(count) : "#ccc";
+            })
+            .on('mouseover', function (event, d) {
+                d3.select(this)
+                    .transition()
+                    .duration(300)
+                    .style('fill-opacity', 0.5)
+                    .style('stroke', 'black')
+                    .style('stroke-width', 5);
+            })
+            .on('mouseout', function (event, d) {
+                d3.select(this)
+                    .transition()
+                    .duration(300)
+                    .style('fill-opacity', 1)
+                    .style('stroke', 'white')
+                    .style('stroke-width', 0.5);
+            });
 
-    createLegend(colorScale, height);
+        createLegend(colorScale, height);
 
-    const zoom = d3.zoom()
-        .scaleExtent([1, 8])
-        .on('zoom', (event) => {
-            g.attr('transform', event.transform);
-        });
-    svg.call(zoom);
-}).catch(error => {
-    console.error("Error loading or processing data:", error);
-});
+        const zoom = d3.zoom()
+            .scaleExtent([1, 8])
+            .on('zoom', (event) => {
+                g.attr('transform', event.transform);
+            });
+        svg.call(zoom);
+    }).catch(error => {
+        console.error("Error loading or processing data:", error);
+    });
+}

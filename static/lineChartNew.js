@@ -3,11 +3,16 @@ const margin = { top: 30, right: 30, bottom: 55, left: 60 };
 const width = svg.attr("width") - margin.left - margin.right;
 const height = svg.attr("height") - margin.top - margin.bottom;
 const g = svg.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
-
+svg.on("click", function (event) {
+    // Check if the click is on the background
+    if (event.target.tagName === 'svg') {
+        d3.selectAll(".bar, .line").style("opacity", 0.8).style("stroke-width", 2);
+    }
+});
 const x = d3.scaleLinear().domain([1, 12]).range([0, width]); // Assuming months 1-12
 const y = d3.scaleLinear().range([height, 0]);
 
-const line = d3.line()
+const lineGenerator = d3.line()
     .x(d => x(d.month_of_release))
     .y(d => y(d.count));
 
@@ -39,39 +44,33 @@ const select = svg.append("foreignObject")
     .append("xhtml:select")
     .attr("id", "dataChoice");
 
-const tooltip = d3.select("body").append("div")
-    .attr("class", "tooltip")
-    .style("position", "absolute")
-    .style("visibility", "hidden")
-    .style("background", "#fff")
-    .style("border", "1px solid #000")
-    .style("padding", "5px");
-
 const color = d3.scaleOrdinal(d3.schemeCategory10);
 
-d3.json('http://127.0.0.1:5000/line_chart').then(function (rawData) {
-    const attributes = ['listed_in', 'type']; // Example attributes
-    select.selectAll("option")
-        .data(attributes)
-        .enter()
-        .append("option")
-        .text(d => d)
-        .attr("value", d => d);
-    // Initial setup: process data and render the default line chart
-    const processedData = processData(rawData, 'listed_in').slice(0, 6);
-    console.log(processedData)
-    updateLineChart(processedData);
-
-    // Setup the dropdown change event listener
-    d3.select('#dataChoice').on('change', function () {
-        const selectedCategory = d3.select(this).property('value');
-        const processedData = processData(rawData, selectedCategory).slice(0, 6);
+function updateLineChartGlobal() {
+    d3.json('http://127.0.0.1:5000/line_chart').then(function (rawData) {
+        const attributes = ['listed_in', 'type']; // Example attributes
+        select.selectAll("option")
+            .data(attributes)
+            .enter()
+            .append("option")
+            .text(d => d)
+            .attr("value", d => d);
+        // Initial setup: process data and render the default line chart
+        const processedData = processData(rawData, 'listed_in');
+        console.log(processedData)
         updateLineChart(processedData);
-        updateChart(selectedCategory);
+
+        // Setup the dropdown change event listener
+        d3.select('#dataChoice').on('change', function () {
+            const selectedCategory = d3.select(this).property('value');
+            const processedData = processData(rawData, selectedCategory);
+            updateLineChart(processedData);
+            updateChart(selectedCategory);
+        });
+    }).catch(error => {
+        console.error('Error fetching the data:', error);
     });
-}).catch(error => {
-    console.error('Error fetching the data:', error);
-});
+}
 
 function processData(rawData, attribute) {
     // Convert 'listed_in' to use the first genre and process dates
@@ -97,34 +96,55 @@ function processData(rawData, attribute) {
 }
 
 function updateLineChart(data) {
+    console.log(data)
     y.domain([0, d3.max(data.flatMap(d => d.values), d => d.count)]).nice();
     g.select('.axis--y').transition().call(d3.axisLeft(y));
-
-    const lines = g.selectAll(".line")
+    console.log("Inside update linechart:" + data)
+    const lines = g.selectAll(".line-group")
         .data(data, d => d.key);
 
-    lines.enter()
-        .append("path")
-        .merge(lines)
+    const linesEnter = lines.enter().append("g")
+        .attr("class", "line-group");
+
+    linesEnter.append("path")
         .attr("class", "line")
-        .attr("d", d => line(d.values))
+        .merge(lines.select(".line")) // enter + update
+        .attr("d", d => lineGenerator(d.values))
+        .style("fill", "none")
         .style("stroke", (d, i) => color(i))
-        .style("stroke-width", 4)
+        .style("stroke-width", 3)
         .on("mouseover", (event, d) => {
-            tooltip.html(d.key)
-                .style("visibility", "visible")
-                .style("left", (event.pageX + 10) + "px")
-                .style("top", (event.pageY - 10) + "px");
+            d3.select(event.currentTarget)
+                .transition().duration(150)  // Select the path element that triggered the event
+                .style("stroke-width", 6)   // Increase stroke width
+                .style("stroke-opacity", 1);
         })
-        .on("mousemove", (event) => {
-            tooltip.style("left", (event.pageX + 10) + "px")
-                .style("top", (event.pageY - 10) + "px");
+        .on("mouseout", (event) => {
+            d3.select(event.currentTarget)
+                .transition().duration(150) // Select the path element that triggered the event
+                .style("stroke-width", 3)   // Reset stroke width
+                .style("stroke-opacity", 0.8);
         })
-        .on("mouseout", () => {
-            tooltip.style("visibility", "hidden");
+        .on("click", function (event, d) {
+            highlightElement(d.key);
         });
 
     lines.exit().remove();
+}
+
+function highlightElement(selectedKey) {
+    // Reset styles
+    d3.selectAll(".bar, .line").style("opacity", 0.5).style("stroke-width", 2);
+
+    // Highlight selected bar
+    d3.selectAll(".bar[data-key='" + selectedKey + "']")
+        .style("opacity", 1)
+        .style("stroke-width", 6);
+
+    // Highlight corresponding line
+    d3.selectAll(".line").filter(d => d.key === selectedKey)
+        .style("opacity", 1)
+        .style("stroke-width", 6);
 }
 
 

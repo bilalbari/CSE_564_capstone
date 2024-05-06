@@ -19,6 +19,7 @@ async function fetchData(attribute = "listed_in") {
 
 function drawBarChart(data, attribute = "listed_in") {
     const svg = d3.select("#barChart");
+    const color = d3.scaleOrdinal(d3.schemeCategory10);
     svg.selectAll("*").remove(); // Clear previous renders
     const margin = { top: 40, right: 20, bottom: 30, left: 40 };
     const width = +svg.attr("width") - margin.left - margin.right;
@@ -57,14 +58,6 @@ function drawBarChart(data, attribute = "listed_in") {
         .attr("text-anchor", "end")
         .text("Rating");
 
-    const tooltip = d3.select("body").append("div")
-        .attr("class", "tooltip")
-        .style("position", "absolute")
-        .style("visibility", "hidden")
-        .style("background", "#fff")
-        .style("border", "1px solid #000")
-        .style("padding", "5px");
-
     // Draw bars
     g.selectAll(".bar")
         .data(data)
@@ -74,26 +67,20 @@ function drawBarChart(data, attribute = "listed_in") {
         .attr("y", d => y(d.rating))
         .attr("width", x.bandwidth())
         .attr("height", d => height - y(d.rating))
-        .style("fill", (d, i) => {
-            // More diverse color palette
-            const colors = ['#E50914', '#F8C200', '#2FCC71', '#DB44FF', '#00A8F3', '#FF5F5F', '#B620E0', '#F45D01', '#7DCE13'];
-            return colors[i % colors.length];
-        })
+        .style("fill", (d, i) => { return color(i); })
         .style("stroke", "white") // Add white border for contrast
         .style("opacity", 0.8) // Default opacity
         .on("mouseover", function (event, d) {
             d3.select(this)
                 .style("opacity", 1); // Increase opacity to highlight bar
-
-            tooltip.html(`Rating: ${d.rating.toFixed(2)}`)
-                .style("visibility", "visible")
-                .style("left", `${event.pageX + 10}px`)
-                .style("top", `${event.pageY - 10}px`);
         })
         .on("mouseout", function (event, d) {
             d3.select(this)
                 .style("opacity", 0.8); // Reset opacity
-            tooltip.style("visibility", "hidden");
+        })
+        .attr("data-key", d => d[attribute])
+        .on("click", function (event, d) {
+            highlightElement(d[attribute]);
         });
 
 }
