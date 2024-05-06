@@ -1,175 +1,189 @@
 html,
 body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  background-color: #141414;
-  color: #ffffff;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: #000000;
+    color: #2f2f2f;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 .header {
-  background-color: #000000;
-  padding: 10px 20px;
-  height: 60px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
+    background-color: #000000;
+    padding: 10px 20px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
 }
 
 .header img {
-  height: 40px;
+    height: 40px;
 }
 
 .year-selector {
-  position: absolute;
-  right: 20px;
-  top: 10px;
+    position: absolute;
+    right: 20px;
+    top: 10px;
 }
 
 .year-button {
-  background-color: #e50914;
-  border: none;
-  color: white;
-  padding: 5px 10px;
-  margin: 0 5px;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s;
+    background-color: #e50914;
+    border: none;
+    color: white;
+    padding: 5px 10px;
+    margin: 0 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
 }
 
 .year-button:hover,
 .year-button.active {
-  background-color: #b20710;
+    background-color: #b20710;
 }
 
 .dashboard-container {
-  height: calc(100% - 60px);
-  /* Adjusts for header height */
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-path {
-  stroke: #000000;
-  stroke-width: 0.5;
+    /* Adjusts for header height */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .dashboard-box {
-  background-color: #ffffff;
-  padding: 15px;
-  margin: 5px;
-  flex-grow: 1;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    background-color: #121212;
+    padding: 15px;
+    margin: 5px;
+    flex-grow: 1;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* stroke: #fffefe; */
+}
+
+.dashboard-box text {
+    fill: #fffefe;
+    /* stroke: #fffefe; */
 }
 
 .row {
-  margin: 0 -5px;
+    margin: 0 -5px;
 }
 
 .col,
 .col-md-6,
 .col-md-3,
 .col-md-6 {
-  padding: 0 5px;
-}
-
-.dashboard-box h4 {
-  margin: 0;
+    padding: 0 5px;
 }
 
 svg {
-  margin: 5px;
-  border: 1px solid #ccc;
-  font-family: "Impact";
-  overflow: hidden;
-  /* Prevents drawing outside the SVG */
+    margin: 5px;
+    border: 1px solid #ccc;
+    font-family: "Impact";
+    overflow: hidden;
+    /* Prevents drawing outside the SVG */
 }
 
 .axis text {
-  fill: black;
-  stroke-width: 1.5px;
-  /* Bolder axis text */
+    fill: rgb(255, 255, 255);
+    stroke-width: 1.5px;
+    font-size: small;
+    /* Bolder axis text */
 }
+
 
 /* .axis line,
 .axis path {
-  stroke: #000;
-  stroke-width: 1.5px;
-} */
+    stroke: #fffefe;
+    /* Darker and bolder ticks */
 
-.brush .extent {
-  fill-opacity: 0.3;
-  stroke: #fff;
-  shape-rendering: crispEdges;
+stroke-width: 1.5px;
+
+/* Thicker lines for ticks */
+
+
 }
-
-/* .line1 path {
+.brush .extent {
+    fill-opacity: 0.3;
+    stroke: #fff;
+    shape-rendering: crispEdges;
+}
+.chart-container {
+    height: 265px;
+    width: 685px;
+    background-color: white;
+    margin: 20px;
+}
+.small-chart-container {
+    height: 265px;
+    width: 325px;
+    background-color: white;
+    margin: 20px;
+}
+.lineDropdown {
+    padding: 4px 12px;
+    font-size: 16px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    color: #333;
+    outline: none;
+    cursor: pointer;
+    margin-left: 465px;
+}
+#wcloud {
+    width: 335px;
+    /* Width set to 335px */
+    
+    height: 300px;
+    /* Height set to 300px */
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+}
+.axis text {
+    text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff;
+    cursor: grab;
+}
+.line1 path {
     fill: none;
     stroke: rgb(226, 224, 224);
     shape-rendering: crispEdges;
 }
-
 .line2 path {
     fill: none;
     stroke: rgb(61, 113, 155);
-} */
-
-.chart-container {
-  height: 265px;
-  width: 685px;
-  background-color: white;
-  margin: 20px;
 }
-
-.small-chart-container {
-  height: 265px;
-  width: 325px;
-  background-color: white;
-  margin: 20px;
-}
-
-.lineDropdown {
-  padding: 4px 12px;
-  font-size: 16px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-  background-color: #fff;
-  color: #333;
-  outline: none;
-  cursor: pointer;
-  margin-left: 465px;
-}
-
-#wcloud {
-  width: 335px;
-  /* Width set to 335px */
-  height: 300px;
-  /* Height set to 300px */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: auto;
-}
-
 .axis text {
-  text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff;
-  cursor: grab;
+    text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff;
+    cursor: grab;
 }
-
 .line1 path {
-  fill: none;
-  stroke: rgb(226, 224, 224);
-  shape-rendering: crispEdges;
+    fill: none;
+    stroke: rgb(226, 224, 224);
+    shape-rendering: crispEdges;
 }
-
 .line2 path {
-  fill: none;
-  stroke: rgb(61, 113, 155);
+    fill: none;
+    stroke: rgb(61, 113, 155);
+}
+.tooltip {
+    position: absolute;
+    visibility: hidden;
+    background-color: #fffafa;
+    color: #ffffff;
+    border: 1px solid #ff0000;
+    padding: 8px;
+    box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.5);
+    border-radius: 4px;
+    text-align: left;
+    font-size: 14px;
+    line-height: 1.4;
+    z-index: 1000;
 }

@@ -115,6 +115,17 @@ function pcpplot2() {
         .style("stroke-opacity", 0.5);
 
       let dragging = {};
+      g.selectAll("path")
+        .data(groupedData)
+        .enter()
+        .append("path")
+        .attr("d", path)
+        .attr("fill", "none")
+        .style("stroke", (d) => {
+          // console.log(color(d.cluster));
+          return color(d.cluster);
+        })
+        .style("stroke-opacity", 0.5);
 
       function position(d) {
         var v = dragging[d];
