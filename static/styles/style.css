@@ -98,13 +98,11 @@ svg {
   /* Bolder axis text */
 }
 
-.axis line,
+/* .axis line,
 .axis path {
   stroke: #000;
-  /* Darker and bolder ticks */
   stroke-width: 1.5px;
-  /* Thicker lines for ticks */
-}
+} */
 
 .brush .extent {
   fill-opacity: 0.3;
@@ -158,4 +156,20 @@ svg {
   justify-content: center;
   align-items: center;
   margin: auto;
+}
+
+.axis text {
+  text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff;
+  cursor: grab;
+}
+
+.line1 path {
+  fill: none;
+  stroke: rgb(226, 224, 224);
+  shape-rendering: crispEdges;
+}
+
+.line2 path {
+  fill: none;
+  stroke: rgb(61, 113, 155);
 }
