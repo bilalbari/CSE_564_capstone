@@ -206,21 +206,49 @@ function getData(svg) {
   return data;
 }
 
-function updateDisplay(data) {
-  if (data.length === 0) {
+// This function merges the active data with full data to include all columns
+function mergeActiveDataWithFullData(activeData) {
+  console.log("activeData ", activeData);
+  const activeIds = new Set(activeData.map((d) => d.show_id)); // Assuming there's an 'id' to uniquely identify rows
+  console.log("active ids ", activeIds);
+  return fullData.filter((d) => activeIds.has(d.show_id));
+}
+
+function updateDisplay() {
+  const brushData = getData(svg);
+  if (brushData.length === 0) {
+    updateOtherCharts(fullData); // When no brushes are active, pass the entire full dataset
     line_2.style("display", null);
   } else {
-    line_2.style("display", function (d) {
-      return data.every(function (obj) {
-        return (
+    const activeData = pcpData.filter((d) =>
+      brushData.every(
+        (obj) =>
           obj.extent[0] <= obj.f.range_value(d[obj.f.value]) &&
           obj.f.range_value(d[obj.f.value]) <= obj.extent[1]
-        );
-      })
+      )
+    );
+
+    const mergedData = mergeActiveDataWithFullData(activeData);
+    updateOtherCharts(mergedData);
+
+    line_2.style("display", (d) =>
+      brushData.every(
+        (obj) =>
+          obj.extent[0] <= obj.f.range_value(d[obj.f.value]) &&
+          obj.f.range_value(d[obj.f.value]) <= obj.extent[1]
+      )
         ? null
-        : "none";
-    });
+        : "none"
+    );
   }
+}
+
+function updateOtherCharts(data) {
+  // This function would implement whatever updates are needed for other charts.
+  // For demonstration, just logging the data to console.
+  console.log("Updating other charts with data:", data);
+  currentWordCloudData = data;
+  updateWordCloud();
 }
 
 function dragStart(data) {
@@ -314,7 +342,7 @@ function createValueObjectsFromData(d) {
   const keys = Object.keys(firstDataItem);
 
   keys.forEach((key) => {
-    if (key !== "color") {
+    if (key !== "color" && key !== "show_id") {
       const valueType = typeof firstDataItem[key];
       const obj = createObject(key, valueType);
       valueObjects.push(obj);

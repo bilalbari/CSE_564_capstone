@@ -250,9 +250,9 @@ eLineChartJson = read_line_chart_data(dataset)
 # Read PCP data for data
 def read_pcp_data():
     # cols = ["MC_Grade", "LS_Grade", "IPO_Year_encoded", "patents_log2", "citations_log2", "FamilyCitations_log2", "NFCitations_log2", "P01_log2", "P18_log2", "C01_log2", "C18_log2", "NFC01_log2", "NFC18_log2"]
-    cols = ["type","director","country","release_year","rating","duration","month_of_release"]
+    cols = ["show_id", "type","country","release_year","rating","duration","month_of_release"]
     df = pd.read_csv(dataset, usecols=cols)
-    df = df.dropna(subset=['country','type','director','release_year','rating','duration','month_of_release'])
+    df = df.dropna(subset=['show_id', 'country','type','release_year','rating','duration','month_of_release'])
     # df['color'] = color_data['color']
     df['country'] = df['country'].apply(ast.literal_eval)
     df['country'] = df['country'].apply(lambda x: x[0])
@@ -308,9 +308,9 @@ def get_word_cloud_data():
 
 
 def read_full_data():
-    cols = ["type","director","country","release_year","rating","duration","month_of_release", "description", "cast"]
+    cols = ["show_id", "type","director","country","release_year","rating","duration","month_of_release", "description", "cast"]
     df = pd.read_csv(dataset, usecols=cols)
-    df = df.dropna(subset=["type","director","country","release_year","rating","duration","month_of_release", "description", "cast"])
+    df = df.dropna(subset=["show_id", "type","director","country","release_year","rating","duration","month_of_release", "description", "cast"])
     df = df.sample(n=100, random_state=42)
     return df
 
