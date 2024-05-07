@@ -4,6 +4,7 @@ async function fetchData(attribute = "listed_in") {
     const data = await response.json();
     // Sort data by rating and slice to get top 8
     const sortedData = data.sort((a, b) => b.rating - a.rating);
+    console.log(sortedData);
     const topData = sortedData.slice(0, 8);
     const otherData = sortedData.slice(8);
 
@@ -80,6 +81,7 @@ function drawBarChart(data, attribute = "listed_in") {
         })
         .attr("data-key", d => d[attribute])
         .on("click", function (event, d) {
+            console.log("Clicked on bar", d[attribute]);
             highlightElement(d[attribute]);
         });
 
