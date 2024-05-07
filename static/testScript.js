@@ -26,7 +26,7 @@ let x, svg, g;
 
 function clearPcpPlot() {
   console.log("Clearing plot...");
-  var container = document.getElementById("testDiv");
+  var container = document.getElementById("pcpPlotId");
   container.innerHTML = "";
 }
 
@@ -68,7 +68,7 @@ function createXScale() {
 
 function createSvg() {
   return d3
-    .select("#testDiv")
+    .select("#pcpPlotId")
     .append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
@@ -96,7 +96,7 @@ function appendLines(svg) {
     .append("path")
     .attr("d", linePath)
     .style("stroke", function (data) {
-      return colorMap[data["color"]];
+      return colorMap[data["cluster"]];
     });
 }
 
@@ -146,7 +146,7 @@ function appendLines(svg, xScale) {
     .append("path")
     .attr("d", linePath)
     .style("stroke", function (data) {
-      return colorMap[data["color"]];
+      return colorMap[data["cluster"]];
     });
 }
 
@@ -342,7 +342,7 @@ function createValueObjectsFromData(d) {
   const keys = Object.keys(firstDataItem);
 
   keys.forEach((key) => {
-    if (key !== "color" && key !== "show_id") {
+    if (key !== "cluster" && key !== "show_id") {
       const valueType = typeof firstDataItem[key];
       const obj = createObject(key, valueType);
       valueObjects.push(obj);

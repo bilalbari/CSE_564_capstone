@@ -57,7 +57,8 @@
             </div>
             <div class="col-md-6">
                 <div class="dashboard-box">
-                    <svg id="pcp_img" width="900" height="425"></svg>
+                    <!-- <svg id="pcp_img" width="900" height="425"></svg> -->
+                    <div id="pcpPlotId" style="height: 300px; width: 700px;"></div>
                 </div>
             </div>
             <div class="col-md-3">
@@ -77,9 +78,9 @@
         </div>
     </div>
 
-    <h4>test div</h4>
+    <!-- <h4>test div</h4> -->
     <!-- <script src="https://d3js.org/d3.v4.js"></script> -->
-    <div id="testDiv" style="height: 300px; width: 900px; background-color: white;"></div>
+    <!-- <div id="testDiv" style="height: 300px; width: 900px; background-color: white;"></div> -->
 
     <!-- <script src="../static/testScript.js"></script> -->
 
@@ -97,23 +98,14 @@
     <script src="../static/stopWords.js"></script>
     <script src="../static/wordCloudScript.js"></script>
 
-    <script src="../static/testJsondata.js"></script>
+    <script src="../static/pcpPlotScript.js"></script>
+
+    <!-- <script src="../static/testJsondata.js"></script> -->
     <script src="../static/testScript.js"></script>
     <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
     <script>
         console.log("pcpData ", json_data);
-        var d = json_data;
-        setDefaultValue(json_data);
-
-        dataDim.forEach((f) => {
-            f.range_value.domain(
-                f.data_type === "number" ?
-                    d3.extent(json_data, (d) => +d[f.value]) :
-                    json_data.map((d) => d[f.value]).sort()
-            );
-        });
-        setPcpData(d);
-        plotPcp();
+        // var d = json_data;
     </script>
     <!-- <script src="https://d3js.org/d3.v4.js"></script>   -->
     <!-- <script src="../static/pcpScript.js"></script> -->

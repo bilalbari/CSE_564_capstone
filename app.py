@@ -122,12 +122,12 @@ def get_average_rating():
 
 # Read PCP data for data
 def read_pcp_data():
-    cols = ["type","director","country","release_year","rating","duration","month_of_release"]
+    cols = ["show_id", "type","country","release_year","rating","duration","month_of_release"]
     df = pd.read_csv(dataset)
     if filter_settings['min_year']:
         df = df[(df['release_year'] >= filter_settings['min_year']) & (df['release_year'] <= filter_settings['max_year'])]
     df = df[cols]
-    df = df.dropna(subset=['country','type','director','release_year','rating','duration','month_of_release'])
+    df = df.dropna(subset=['show_id', 'type','country','release_year','rating','duration','month_of_release'])
     # df['country'] = df['country'].apply(ast.literal_eval)
     # df['country'] = df['country'].apply(lambda x: x[0])
     df['cluster'] = np.random.randint(0, 3, size=len(df))
@@ -163,7 +163,7 @@ def read_full_data():
     cols = ["show_id", "type","director","country","release_year","rating","duration","month_of_release", "description", "cast"]
     df = pd.read_csv(dataset, usecols=cols)
     df = df.dropna(subset=["show_id", "type","director","country","release_year","rating","duration","month_of_release", "description", "cast"])
-    df = df.sample(n=100, random_state=42)
+    # df = df.sample(n=100, random_state=42)
     return df
 
 @app.route('/fullData')
