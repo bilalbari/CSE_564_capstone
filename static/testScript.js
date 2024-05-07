@@ -120,7 +120,7 @@ function appendAxes(svg, xScale) {
     .append("text")
     .attr("class", "axis-label")
     .attr("y", -25)
-    .style("fill", "black")
+    .style("fill", "white")
     .style("font-size", 10)
     .text(function (data) {
       return data.value;

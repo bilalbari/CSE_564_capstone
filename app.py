@@ -176,7 +176,7 @@ def read_pcp_data():
     # df['country'] = df['country'].apply(ast.literal_eval)
     # df['country'] = df['country'].apply(lambda x: x[0])
     df['cluster'] = np.random.randint(0, 3, size=len(df))
-    df = df.sample(n=100, random_state=42)
+    # df = df.sample(n=100, random_state=42)
     return df
 
 # e21Json = read_pcp_data(dataset, data3)
