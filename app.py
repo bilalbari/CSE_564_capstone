@@ -23,7 +23,8 @@ filter_settings = {
     'min_year': None,
     'max_year': None,
     'country': None,
-    'listed_in': None
+    'listed_in': None,
+    'showIDs': None
 }
 
 reverse_name_mapping = {
@@ -49,6 +50,7 @@ def set_filter():
         filter_settings['max_year'] = None
         filter_settings['country'] = None
         filter_settings['listed_in'] = None
+        filter_settings['showIDs'] = None
         return jsonify({'message': 'Filter removed'}), 200
 
     if country and country in reverse_name_mapping:
@@ -104,6 +106,8 @@ def load_data():
     if filter_settings['listed_in']:
         df = df[df['listed_in'] == filter_settings['listed_in']]
     df = df.dropna(subset=['country'])
+    if filter_settings['showIDs']:  
+        df = df[df['show_id'].isin(filter_settings['showIDs'])]
     # df['country'] = df['country'].apply(ast.literal_eval)
     # df = df.explode('country')
     df = correct_country_names(df, geojson_countries)
@@ -128,6 +132,8 @@ def read_line_chart_data():
         df = df[df['country'] == filter_settings['country']]
     if filter_settings['listed_in']:
         df = df[df['listed_in'] == filter_settings['listed_in']]
+    if filter_settings['showIDs']:  
+        df = df[df['show_id'].isin(filter_settings['showIDs'])]
     df = df[cols]
     df = df.dropna(subset=['type','listed_in','month_of_release'])
     # df['listed_in'] = df['listed_in'].apply(ast.literal_eval)
@@ -141,6 +147,8 @@ def preprocess_data(column_name):
         df = df[df['country'] == filter_settings['country']]
     if filter_settings['listed_in']:
         df = df[df['listed_in'] == filter_settings['listed_in']]
+    if filter_settings['showIDs']:  
+        df = df[df['show_id'].isin(filter_settings['showIDs'])]
     return df
     if column_name in ['country', 'listed_in','cast']:  # Add any other columns that contain lists
         df[column_name] = df[column_name].apply(ast.literal_eval)   
@@ -162,6 +170,17 @@ def get_average_rating():
     
     return result
 
+@app.route('/set_showid_filter', methods=['POST'])
+def set_showid_filter():
+    data = request.get_json()
+    show_ids = data.get('showIDs', [])
+    
+    if not show_ids:
+        return jsonify({'error': 'No show IDs provided'}), 400
+    
+    filter_settings['showIDs'] = show_ids
+    return jsonify({'message': f'Show IDs filter set', 'showIDs': show_ids}), 200
+
 # Read PCP data for data
 def read_pcp_data():
     cols = ["show_id", "type","country","release_year","rating","duration","month_of_release"]
@@ -172,6 +191,8 @@ def read_pcp_data():
         df = df[df['country'] == filter_settings['country']]
     if filter_settings['listed_in']:
         df = df[df['listed_in'] == filter_settings['listed_in']]
+    if filter_settings['showIDs']:  
+        df = df[df['show_id'].isin(filter_settings['showIDs'])]
     df = df[cols]
     df = df.dropna(subset=['show_id', 'type','country','release_year','rating','duration','month_of_release'])
     # df['country'] = df['country'].apply(ast.literal_eval)
@@ -191,6 +212,8 @@ def read_word_cloud_data():
         df = df[(df['release_year'] >= filter_settings['min_year']) & (df['release_year'] <= filter_settings['max_year'])]
     if filter_settings['listed_in']:
         df = df[df['listed_in'] == filter_settings['listed_in']]
+    if filter_settings['showIDs']:  
+        df = df[df['show_id'].isin(filter_settings['showIDs'])]
     df = df[cols]
     return df
 

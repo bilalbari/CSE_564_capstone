@@ -16,10 +16,11 @@ function setFilterYear(year = 2021) {
             updateLineChartGlobal();
             updateChart();
             updateWordCloud();
-            alert(`Filter updated: ${JSON.stringify(data)}`);
+            plotPcpFinal();
+            // alert(`Filter updated: ${JSON.stringify(data)}`);
         })
         .catch((error) => {
             console.error('Error:', error);
-            alert(`Error setting filter: ${error}`);
+            // alert(`Error setting filter: ${error}`);
         });
 }

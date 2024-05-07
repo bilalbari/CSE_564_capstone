@@ -243,11 +243,34 @@ function updateDisplay() {
   }
 }
 
+function setFilterShowID(showIDs) {
+  fetch('http://127.0.0.1:5000/set_showid_filter', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ showIDs: showIDs }) // Send showIDs as a JSON object
+  })
+    .then(response => response.json())
+    .then(data => {
+      console.log('Success:', data);
+      updateChoro();
+      updateLineChartGlobal();
+      updateChart();
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+      // alert(`Error setting filter: ${error}`);
+    });
+}
+
 function updateOtherCharts(data) {
   // This function would implement whatever updates are needed for other charts.
   // For demonstration, just logging the data to console.
   console.log("Updating other charts with data:", data);
   currentWordCloudData = data;
+  const showIDS = data.map(item => item.show_id);
+  setFilterShowID(showIDS);
   updateWordCloud();
 }
 
