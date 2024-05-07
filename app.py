@@ -22,7 +22,8 @@ dataset = "modified_new_netflix_data.csv"
 filter_settings = {
     'min_year': None,
     'max_year': None,
-    'country': None
+    'country': None,
+    'listed_in': None
 }
 
 reverse_name_mapping = {
@@ -58,6 +59,16 @@ def set_filter():
     # filter_settings['country'] = country if country else None
     return jsonify({'message': f'Filter set to year {year}'}), 200
 
+@app.route('/set_filter_listed', methods=['POST'])
+def set_filter_listed_in():
+    listed_in = request.args.get('listed_in', default=None, type=str)
+    if listed_in:
+        filter_settings['listed_in'] = listed_in
+    else:
+        filter_settings['listed_in'] = None
+    return jsonify({'message': f'Filter set to listed_in {listed_in}'}), 200
+
+
 def load_geojson_countries(geojson_path):
     with open(geojson_path, 'r') as f:
         data = json.load(f)
@@ -79,8 +90,6 @@ def correct_country_names(data, country_list):
             name_mapping[original_name] = original_name
             reverse_name_mapping[original_name] = original_name
 
-    
-    # print(name_mapping)
     data['country'] = data['country'].map(name_mapping)
     return data
 
@@ -91,6 +100,8 @@ def load_data():
         df = df[(df['release_year'] >= filter_settings['min_year']) & (df['release_year'] <= filter_settings['max_year'])]
     if filter_settings['country']:
         df = df[df['country'] == filter_settings['country']]
+    if filter_settings['listed_in']:
+        df = df[df['listed_in'] == filter_settings['listed_in']]
     df = df.dropna(subset=['country'])
     # df['country'] = df['country'].apply(ast.literal_eval)
     # df = df.explode('country')
@@ -114,6 +125,8 @@ def read_line_chart_data():
         df = df[(df['release_year'] >= filter_settings['min_year']) & (df['release_year'] <= filter_settings['max_year'])]
     if filter_settings['country']:
         df = df[df['country'] == filter_settings['country']]
+    if filter_settings['listed_in']:
+        df = df[df['listed_in'] == filter_settings['listed_in']]
     df = df[cols]
     df = df.dropna(subset=['type','listed_in','month_of_release'])
     # df['listed_in'] = df['listed_in'].apply(ast.literal_eval)
@@ -125,6 +138,8 @@ def preprocess_data(column_name):
         df = df[(df['release_year'] >= filter_settings['min_year']) & (df['release_year'] <= filter_settings['max_year'])]
     if filter_settings['country']:
         df = df[df['country'] == filter_settings['country']]
+    if filter_settings['listed_in']:
+        df = df[df['listed_in'] == filter_settings['listed_in']]
     return df
     if column_name in ['country', 'listed_in','cast']:  # Add any other columns that contain lists
         df[column_name] = df[column_name].apply(ast.literal_eval)   
@@ -154,6 +169,8 @@ def read_pcp_data():
         df = df[(df['release_year'] >= filter_settings['min_year']) & (df['release_year'] <= filter_settings['max_year'])]
     if filter_settings['country']:
         df = df[df['country'] == filter_settings['country']]
+    if filter_settings['listed_in']:
+        df = df[df['listed_in'] == filter_settings['listed_in']]
     df = df[cols]
     df = df.dropna(subset=['country','type','director','release_year','rating','duration','month_of_release'])
     # df['country'] = df['country'].apply(ast.literal_eval)
@@ -171,6 +188,8 @@ def read_word_cloud_data():
         df = df[df['country'] == filter_settings['country']]
     if filter_settings['min_year']:
         df = df[(df['release_year'] >= filter_settings['min_year']) & (df['release_year'] <= filter_settings['max_year'])]
+    if filter_settings['listed_in']:
+        df = df[df['listed_in'] == filter_settings['listed_in']]
     df = df[cols]
     return df
 
