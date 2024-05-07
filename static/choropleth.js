@@ -52,8 +52,8 @@ function updateChoro() {
             .fitSize([width, height], world); // Assuming geojsonData contains your features
         const pathGenerator = d3.geoPath().projection(projection);
         const dataMap = new Map(data.map(item => [item.country, item.count]));
-        const colorScale = d3.scaleSequential(t => d3.interpolateReds(t * 0.8 + 0.2))
-            .domain([1, d3.max(data, d => d.count)]);
+        const colorScale = d3.scaleSequential(t => d3.interpolateReds(t))
+            .domain([1, 300]);
         const g = svg.append("g")
             .selectAll("path")
             .data(countries)
@@ -100,8 +100,9 @@ function updateChoro() {
 }
 
 function updateDataBasedOnCountry(country) {
+    let encodedcountry = encodeURIComponent(country);
     let url = 'http://127.0.0.1:5000/set_filter';
-    url += `?country=${country}`;
+    url += `?country=${encodedcountry}`;
     console.log(`URL: ${url}`)
     // Use the Fetch API to send the request
     fetch(url, {

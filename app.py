@@ -48,6 +48,7 @@ def set_filter():
         filter_settings['min_year'] = None
         filter_settings['max_year'] = None
         filter_settings['country'] = None
+        filter_settings['listed_in'] = None
         return jsonify({'message': 'Filter removed'}), 200
 
     if country and country in reverse_name_mapping:

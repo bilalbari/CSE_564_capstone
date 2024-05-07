@@ -147,13 +147,15 @@ function highlightElement(selectedKey) {
         .style("opacity", 1)
         .style("stroke-width", 6);
 
+    setFilterGenre(selectedKey);
+
 }
 
 function setFilterGenre(genre) {
+    let encodedGenre = encodeURIComponent(genre);
     let url = 'http://127.0.0.1:5000/set_filter_listed';
-    url += `?listed_in=${genre}`;
+    url += `?listed_in=${encodedGenre}`;
 
-    console.log(`Setting filter to year: ${year}`)
     console.log(`URL: ${url}`)
     // Use the Fetch API to send the request
     fetch(url, {
