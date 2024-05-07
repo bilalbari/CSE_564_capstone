@@ -83,7 +83,7 @@ function processData(rawData, attribute) {
   // console.log(rawData)
   const data = rawData.map((d) => ({
     ...d,
-    listed_in: d.listed_in[0],
+    listed_in: d.listed_in,
     month_of_release: +d.month_of_release,
   }));
 
@@ -144,6 +144,7 @@ function updateLineChart(data) {
         .style("stroke-opacity", 0.8);
     })
     .on("click", function (event, d) {
+      console.log("Clicked for key value " + d.key);
       highlightElement(d.key);
     });
 
@@ -164,4 +165,26 @@ function highlightElement(selectedKey) {
     .filter((d) => d.key === selectedKey)
     .style("opacity", 1)
     .style("stroke-width", 6);
+}
+
+function setFilterGenre(genre) {
+  let url = "http://127.0.0.1:5000/set_filter_listed";
+  url += `?listed_in=${genre}`;
+
+  console.log(`Setting filter to year: ${year}`);
+  console.log(`URL: ${url}`);
+  // Use the Fetch API to send the request
+  fetch(url, {
+    method: "POST",
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      console.log("Success:", data);
+      updateChoro();
+      alert(`Filter updated: ${JSON.stringify(data)}`);
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      alert(`Error setting filter: ${error}`);
+    });
 }

@@ -73,6 +73,11 @@ function updateChoro() {
           const count = dataMap.get(d.properties.name);
           return count ? colorScale(count) : "#ccc";
         })
+        .on("click", function (event, d) {
+          // Make an API request to the backend with the selected country
+          console.log("Clicked on country:", d.properties.name);
+          updateDataBasedOnCountry(d.properties.name);
+        })
         .on("mouseover", function (event, d) {
           d3.select(this)
             .transition()
@@ -102,5 +107,28 @@ function updateChoro() {
     })
     .catch((error) => {
       console.error("Error loading or processing data:", error);
+    });
+}
+
+function updateDataBasedOnCountry(country) {
+  let url = "http://127.0.0.1:5000/set_filter";
+  url += `?country=${country}`;
+  console.log(`URL: ${url}`);
+  // Use the Fetch API to send the request
+  fetch(url, {
+    method: "POST",
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      console.log("Success:", data);
+      updateChoro();
+      updateLineChartGlobal();
+      updateChart();
+      updateWordCloud();
+      alert(`Filter updated: ${JSON.stringify(data)}`);
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      alert(`Error setting filter: ${error}`);
     });
 }
