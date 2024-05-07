@@ -45,7 +45,6 @@ body {
 }
 
 .dashboard-container {
-
     /* Adjusts for header height */
     display: flex;
     flex-direction: column;
@@ -67,7 +66,6 @@ body {
 
 .dashboard-box text {
     fill: #fffefe;
-
     /* stroke: #fffefe; */
 }
 
@@ -81,7 +79,6 @@ body {
 .col-md-6 {
     padding: 0 5px;
 }
-
 
 svg {
     margin: 5px;
@@ -98,34 +95,35 @@ svg {
     /* Bolder axis text */
 }
 
-.axis line,
+
+/* .axis line,
 .axis path {
     stroke: #fffefe;
     /* Darker and bolder ticks */
-    stroke-width: 1.5px;
-    /* Thicker lines for ticks */
-}
 
+stroke-width: 1.5px;
+
+/* Thicker lines for ticks */
+
+
+}
 .brush .extent {
     fill-opacity: 0.3;
     stroke: #fff;
     shape-rendering: crispEdges;
 }
-
 .chart-container {
     height: 265px;
     width: 685px;
     background-color: white;
     margin: 20px;
 }
-
 .small-chart-container {
     height: 265px;
     width: 325px;
     background-color: white;
     margin: 20px;
 }
-
 .lineDropdown {
     padding: 4px 12px;
     font-size: 16px;
@@ -137,18 +135,44 @@ svg {
     cursor: pointer;
     margin-left: 465px;
 }
-
 #wcloud {
     width: 335px;
     /* Width set to 335px */
+    
     height: 300px;
     /* Height set to 300px */
+    
     display: flex;
     justify-content: center;
     align-items: center;
     margin: auto;
 }
-
+.axis text {
+    text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff;
+    cursor: grab;
+}
+.line1 path {
+    fill: none;
+    stroke: rgb(226, 224, 224);
+    shape-rendering: crispEdges;
+}
+.line2 path {
+    fill: none;
+    stroke: rgb(61, 113, 155);
+}
+.axis text {
+    text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff;
+    cursor: grab;
+}
+.line1 path {
+    fill: none;
+    stroke: rgb(226, 224, 224);
+    shape-rendering: crispEdges;
+}
+.line2 path {
+    fill: none;
+    stroke: rgb(61, 113, 155);
+}
 .tooltip {
     position: absolute;
     visibility: hidden;

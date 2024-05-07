@@ -164,7 +164,7 @@ def get_average_rating():
 
 # Read PCP data for data
 def read_pcp_data():
-    cols = ["type","director","country","release_year","rating","duration","month_of_release"]
+    cols = ["show_id", "type","country","release_year","rating","duration","month_of_release"]
     df = pd.read_csv(dataset)
     if filter_settings['min_year']:
         df = df[(df['release_year'] >= filter_settings['min_year']) & (df['release_year'] <= filter_settings['max_year'])]
@@ -173,11 +173,11 @@ def read_pcp_data():
     if filter_settings['listed_in']:
         df = df[df['listed_in'] == filter_settings['listed_in']]
     df = df[cols]
-    df = df.dropna(subset=['country','type','director','release_year','rating','duration','month_of_release'])
+    df = df.dropna(subset=['show_id', 'type','country','release_year','rating','duration','month_of_release'])
     # df['country'] = df['country'].apply(ast.literal_eval)
     # df['country'] = df['country'].apply(lambda x: x[0])
     df['cluster'] = np.random.randint(0, 3, size=len(df))
-    df = df.sample(n=100, random_state=42)
+    # df = df.sample(n=100, random_state=42)
     return df
 
 # e21Json = read_pcp_data(dataset, data3)
@@ -202,6 +202,23 @@ def get_pcp():
 @app.route('/word_cloud_data')
 def get_word_cloud_data():
     e20Json = read_word_cloud_data()
+    return jsonify(e20Json.to_dict(orient='records'))
+    # myData.data = json.loads(combined_data_string)
+    # Data = myData.data
+    # return jsonify(combined_data)
+
+
+
+def read_full_data():
+    cols = ["show_id", "type","director","country","release_year","rating","duration","month_of_release", "description", "cast"]
+    df = pd.read_csv(dataset, usecols=cols)
+    df = df.dropna(subset=["show_id", "type","director","country","release_year","rating","duration","month_of_release", "description", "cast"])
+    # df = df.sample(n=100, random_state=42)
+    return df
+
+@app.route('/fullData')
+def get_full_data():
+    e20Json = read_full_data()
     return jsonify(e20Json.to_dict(orient='records'))
 
 if __name__ == '__main__':

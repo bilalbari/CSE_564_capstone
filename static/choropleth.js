@@ -1,58 +1,66 @@
 function createLegend(scale, height) {
-    const svg = d3.select("#choropleth_img");
-    const legend = svg.append("g")
-        .attr("id", "legend");
+  const svg = d3.select("#choropleth_img");
+  const legend = svg.append("g").attr("id", "legend");
 
-    const legendData = scale.ticks(5).reverse();
+  const legendData = scale.ticks(5).reverse();
 
-    const legendItemSize = 20;
-    const legendSpacing = 4;
-    const xOffset = 50; // Distance from left side of the SVG
-    const yOffset = height - legendData.length * (legendItemSize + legendSpacing) - 20; // Distance from bottom of the SVG
+  const legendItemSize = 20;
+  const legendSpacing = 4;
+  const xOffset = 50; // Distance from left side of the SVG
+  const yOffset =
+    height - legendData.length * (legendItemSize + legendSpacing) - 20; // Distance from bottom of the SVG
 
-    // Create a group for each legend item
-    const legendItem = legend.selectAll(".legend-item")
-        .data(legendData)
-        .enter().append("g")
-        .attr("class", "legend-item")
-        .attr("transform", (d, i) => `translate(0, ${i * (legendItemSize + legendSpacing)})`);
+  // Create a group for each legend item
+  const legendItem = legend
+    .selectAll(".legend-item")
+    .data(legendData)
+    .enter()
+    .append("g")
+    .attr("class", "legend-item")
+    .attr(
+      "transform",
+      (d, i) => `translate(0, ${i * (legendItemSize + legendSpacing)})`
+    );
 
-    // Append a rectangle to each group
-    legendItem.append("rect")
-        .attr("x", xOffset)
-        .attr("y", yOffset)
-        .attr("width", legendItemSize)
-        .attr("height", legendItemSize)
-        .attr("fill", scale);
+  // Append a rectangle to each group
+  legendItem
+    .append("rect")
+    .attr("x", xOffset)
+    .attr("y", yOffset)
+    .attr("width", legendItemSize)
+    .attr("height", legendItemSize)
+    .attr("fill", scale);
 
-    // Append text to each group
-    legendItem.append("text")
-        .attr("x", xOffset + legendItemSize + 5)
-        .attr("y", yOffset + legendItemSize / 2)
-        .attr("dy", "0.35em")
-        .style("stroke", "white")
-        .text(d => d);
+  // Append text to each group
+  legendItem
+    .append("text")
+    .attr("x", xOffset + legendItemSize + 5)
+    .attr("y", yOffset + legendItemSize / 2)
+    .attr("dy", "0.35em")
+    .style("stroke", "white")
+    .text((d) => d);
 
-    return legend;
+  return legend;
 }
 
 function updateChoro() {
-    Promise.all([
-        d3.json("../world.geojson"),
-        d3.json("http://127.0.0.1:5000/data")
-    ]).then(([world, data]) => {
-        const countries = world.features;
-        console.log("Countries:", countries);
-        const svg = d3.select("#choropleth_img");
-        svg.selectAll("*").remove(); // Clear previous renders
-        const width = +svg.attr("width");
-        const height = +svg.attr("height");
+  Promise.all([
+    d3.json("../world.geojson"),
+    d3.json("http://127.0.0.1:5000/data"),
+  ])
+    .then(([world, data]) => {
+      const countries = world.features;
+      console.log("Countries:", countries);
+      const svg = d3.select("#choropleth_img");
+      svg.selectAll("*").remove(); // Clear previous renders
+      const width = +svg.attr("width");
+      const height = +svg.attr("height");
 
         const projection = d3.geoNaturalEarth1()
             .fitSize([width, height], world); // Assuming geojsonData contains your features
         const pathGenerator = d3.geoPath().projection(projection);
         const dataMap = new Map(data.map(item => [item.country, item.count]));
-        const colorScale = d3.scaleSequential(t => d3.interpolateReds(t))
+        const colorScale = d3.scaleSequential(t => d3.interpolateReds(t*0.8 + 0.2))
             .domain([1, 300]);
         const g = svg.append("g")
             .selectAll("path")
@@ -86,16 +94,18 @@ function updateChoro() {
                     .style('stroke-width', 0.5);
             });
 
-        createLegend(colorScale, height);
+      createLegend(colorScale, height);
 
-        const zoom = d3.zoom()
-            .scaleExtent([1, 8])
-            .on('zoom', (event) => {
-                g.attr('transform', event.transform);
-            });
-        svg.call(zoom);
-    }).catch(error => {
-        console.error("Error loading or processing data:", error);
+      const zoom = d3
+        .zoom()
+        .scaleExtent([1, 8])
+        .on("zoom", (event) => {
+          g.attr("transform", event.transform);
+        });
+      svg.call(zoom);
+    })
+    .catch((error) => {
+      console.error("Error loading or processing data:", error);
     });
 }
 

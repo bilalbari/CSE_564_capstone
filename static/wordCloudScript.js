@@ -1,33 +1,36 @@
-let wordCloudMainData;
+let currentWordCloudData;
 
 function plotWordCloud() {
   d3.json(`http://127.0.0.1:5000/word_cloud_data`)
     .then(function (data) {
       console.log("new word cloud mainData ", data);
-      wordCloudMainData = data;
-      // const dataField = document.getElementById("dataChoice").value;
+      currentWordCloudData = data;
       updateWordCloud();
     })
     .catch((error) => console.error("Error fetching or parsing data:", error));
 }
 
 function updateWordCloud() {
+  console.log(
+    "received data for population in word cloud",
+    currentWordCloudData
+  );
   const dataField = document.getElementById("dataChoiceNew").value;
   console.log("Selected field for word cloud: ", dataField);
   let texts; // This will hold an array of text elements to process
   let topHowMany = 10;
   if (dataField === "description") {
-    texts = wordCloudMainData.map((item) => item.description);
+    texts = currentWordCloudData.map((item) => item.description);
     topHowMany = 25;
   } else if (dataField === "cast") {
     // Parse the pseudo-array format for cast
-    texts = wordCloudMainData.flatMap((item) =>
+    texts = currentWordCloudData.flatMap((item) =>
       item.cast.slice(2, -2).split("', '")
     );
   } else if (dataField === "director") {
     // Directly use the director's name
-    // texts = wordCloudMainData.map((item) => item.director);
-    texts = wordCloudMainData.flatMap((item) =>
+    // texts = data.map((item) => item.director);
+    texts = currentWordCloudData.flatMap((item) =>
       item.director.split(",").map((name) => name.trim())
     );
   }
@@ -60,9 +63,13 @@ function updateWordCloud() {
 
   // Function to scale sizes to a new range
   function scaleSize(oldSize, oldMin, oldMax, newMin, newMax) {
-    return (
-      ((newMax - newMin) * (oldSize - oldMin)) / (oldMax - oldMin) + newMin
-    );
+    if (oldMax == oldMin || oldSize == oldMin || newMax == newMin) {
+      return 20;
+    }
+    var newScaledSize =
+      ((newMax - newMin) * (oldSize - oldMin)) / (oldMax - oldMin) + newMin;
+    // console.log("newScaledSize ", newScaledSize);
+    return newScaledSize;
   }
 
   // Scale the sizes in the formattedTopWords
@@ -104,7 +111,6 @@ function drawWordCloud(words) {
     .font("Impact")
     .fontSize((d) => d.size)
     .on("end", function (drawnWords) {
-
       const group = svg.append("g").attr("transform", "translate(167.5,150)");
       group
         .selectAll("text")
@@ -117,8 +123,6 @@ function drawWordCloud(words) {
         .attr("text-anchor", "middle")
         .attr("transform", (d) => `translate(${d.x}, ${d.y})`)
         .text((d) => d.text);
-
-
     });
 
   layout.start();
@@ -126,7 +130,8 @@ function drawWordCloud(words) {
 
 document.addEventListener("DOMContentLoaded", () => {
   const svg = d3.select("#wcloud");
-  const select = svg.append("foreignObject")
+  const select = svg
+    .append("foreignObject")
     .attr("width", 80)
     .attr("height", 30)
     .attr("x", 335 - 100)
@@ -134,15 +139,15 @@ document.addEventListener("DOMContentLoaded", () => {
     .append("xhtml:select")
     .attr("id", "dataChoiceNew");
 
-  const attributes = ['description', 'cast', 'director']; // Example attributes
+  const attributes = ["description", "cast", "director"]; // Example attributes
 
-  select.selectAll("option")
+  select
+    .selectAll("option")
     .data(attributes)
     .enter()
     .append("option")
-    .text(d => d)
-    .attr("value", d => d);
-
+    .text((d) => d)
+    .attr("value", (d) => d);
 
   document
     .getElementById("dataChoiceNew")
