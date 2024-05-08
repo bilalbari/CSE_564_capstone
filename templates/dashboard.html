@@ -53,7 +53,12 @@
                     <svg id="barChart" width="100%" height="100%"></svg>
                 </div>
             </div>
-            <div class="col-md-8">
+            <div class="col-md-3">
+                <div class="dashboard-box">
+                    <svg id="odometer" width="300" height="300"></svg>
+                </div>
+            </div>
+            <div class="col-md-5">
                 <div class="dashboard-box">
                     <svg id="pcpPlot" width="100%" height="100%"></svg>
                 </div>
@@ -73,6 +78,7 @@
     <script src="../static/lineChartNew.js"></script>
     <script src="../static/barChart.js"></script>
     <script src="../static/updateDashboard.js"></script>
+    <script src="../static/odometerChart.js"></script>
     <script>
         var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
         var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
