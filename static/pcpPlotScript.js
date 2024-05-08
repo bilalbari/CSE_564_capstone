@@ -4,7 +4,7 @@ function getFullData() {
   d3.json(`http://127.0.0.1:5000/fullData`)
     .then(function (data) {
       fullData = data;
-      console.log("fullData ", fullData);
+      // console.log("fullData ", fullData);
     })
     .catch((error) => console.error("Error fetching or parsing data:", error));
 }
@@ -12,7 +12,7 @@ function getFullData() {
 function plotPcpFinal() {
   d3.json(`http://127.0.0.1:5000/pcp_data`)
     .then(function (data) {
-      console.log("final pcp data ", data);
+      // console.log("final pcp data ", data);
       setDefaultValue(data);
 
       dataDim.forEach((f) => {

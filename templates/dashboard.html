@@ -27,96 +27,49 @@
             <button class="year-button" id="reset" onclick=setFilterYear(3000)>Reset</button>
         </div>
     </div>
-    <div class="container-fluid dashboard-container">
-        <div class="row flex-grow-1">
-            <div class="col-md-6">
+    <div class="dashboard-container">
+        <div class="row">
+            <!-- <div class="dashboard-box"> -->
+            <div class="col-md-4">
                 <div class="dashboard-box">
-                    <!-- <h4>Column 1, Row 1</h4> -->
-                    <svg id="choropleth_img" width="900" height="425"></svg>
+                    <svg id="lineChart" width="100%" height="100%"></svg>
                 </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-5">
                 <div class="dashboard-box">
-                    <!-- <div> -->
-                    <!-- <label for="dataChoice">Choose data:</label>
-                    <select id="dataChoice">
-                        <option value="type">Type</option>
-                        <option value="listed_in">Listed In</option>
-                    </select> -->
-                    <!-- </div> -->
-                    <svg id="lineChart" width="600" height="425"></svg>
-                </div>
-
-            </div>
-        </div>
-        <div class="row flex-grow-1">
-            <div class="col-md-6">
-                <div class="dashboard-box">
-                    <svg id="barChart" width="600" height="425"></svg>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="dashboard-box">
-                    <!-- <svg id="pcp_img" width="900" height="425"></svg> -->
-                    <div id="pcpPlotId" style="height: 300px; width: 700px;"></div>
+                    <svg id="choropleth_img" width="100%" height="100%"></svg>
                 </div>
             </div>
             <div class="col-md-3">
-                <!-- <select id="dataFieldSelector">
-                    <option value="description">Description</option>
-                    <option value="cast">Cast</option>
-                    <option value="director">Director</option>
-                </select> -->
                 <div class="dashboard-box">
-                    <!-- <h4>Word Cloud</h4> -->
-                    <!-- <svg id="wordCloudContainer" width="600" height="350"></svg> -->
-                    <!-- <div id="wcloud"> -->
-                    <svg id="wcloud" width="350" height="425"></svg>
-                    <!-- </div> -->
+                    <svg id="wcloud" width="100%" height="100%"></svg>
+                </div>
+            </div>
+            <!-- </div> -->
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="dashboard-box">
+                    <svg id="barChart" width="100%" height="100%"></svg>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="dashboard-box">
+                    <svg id="pcpPlot" width="100%" height="100%"></svg>
                 </div>
             </div>
         </div>
     </div>
-
-    <!-- <h4>test div</h4> -->
-    <!-- <script src="https://d3js.org/d3.v4.js"></script> -->
-    <!-- <div id="testDiv" style="height: 300px; width: 900px; background-color: white;"></div> -->
-
-    <!-- <script src="../static/testScript.js"></script> -->
-
-    <!-- <script src="https://d3js.org/d3.v6.min.js"></script> -->
-    <!-- Load d3.js -->
-    <!-- <script src="https://d3js.org/d3.v4.js"></script> -->
-
-    <!-- Load d3-cloud -->
-    <!-- <script src="https://cdn.jsdelivr.net/gh/holtzy/D3-graph-gallery@master/LIB/d3.layout.cloud.js"></script> -->
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-cloud/1.2.5/d3.layout.cloud.min.js"></script> -->
-
     <script src="../static/script.js"></script>
     <script src="../static/choropleth.js"></script>
     <script src="../static/pcpplot2.js"></script>
     <script src="../static/stopWords.js"></script>
     <script src="../static/wordCloudScript.js"></script>
-
     <script src="../static/pcpPlotScript.js"></script>
-
-    <!-- <script src="../static/testJsondata.js"></script> -->
     <script src="../static/testScript.js"></script>
-    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
     <script>
-        console.log("pcpData ", json_data);
-        // var d = json_data;
+        // console.log("pcpData ", json_data);
     </script>
-    <!-- <script src="https://d3js.org/d3.v4.js"></script>   -->
-    <!-- <script src="../static/pcpScript.js"></script> -->
-    <!-- <script src="../static/wordCloud.js"></script> -->
-    <!-- <script src="../static/renderPlotScript.js"></script> -->
-    <!-- Render plot -->
-    <!-- <script src="{{ url_for('static', filename='renderPlotScript.js') }}"></script> -->
-    <!-- Render plot -->
-    <!-- <script src="{{ url_for('static', filename='wordCloud.js') }}"></script> -->
-    <!-- Plot script -->
-    <!-- <script src="{{ url_for('static', filename='pcpScript.js') }}"></script> -->
     <script src="../static/lineChartNew.js"></script>
     <script src="../static/barChart.js"></script>
     <script src="../static/updateDashboard.js"></script>
@@ -126,7 +79,6 @@
             return new bootstrap.Tooltip(tooltipTriggerEl)
         });
     </script>
-
 </body>
 
 </html>

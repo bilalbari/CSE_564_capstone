@@ -1,7 +1,8 @@
 const svg2 = d3.select("#lineChart");
-const margin2 = { top: 30, right: 30, bottom: 55, left: 60 };
-const width2 = svg2.attr("width") - margin2.left - margin2.right;
-const height2 = svg2.attr("height") - margin2.top - margin2.bottom;
+const margin2 = { top: 10, right: 10, bottom: 55, left: 60 };
+const height2 = svg2.node().getBoundingClientRect().height - margin2.top - margin2.bottom;
+const width2 = svg2.node().getBoundingClientRect().width - margin2.left - margin2.right;;
+
 const g2 = svg2
     .append("g")
     .attr("transform", `translate(${margin2.left},${margin2.top})`);
@@ -42,7 +43,7 @@ const select = svg2
     .append("foreignObject")
     .attr("width", 100)
     .attr("height", 30)
-    .attr("x", width2 - margin2.left + 10)
+    .attr("x", width2 - margin2.left)
     .attr("y", 0)
     .append("xhtml:select")
     .attr("id", "dataChoice");
@@ -62,7 +63,7 @@ function updateLineChartGlobal() {
                 .attr("value", (d) => d);
             // Initial setup: process data and render the default line chart
             const processedData = processData(rawData, "listed_in");
-            console.log(processedData);
+            // console.log(processedData);
             updateLineChart(processedData);
 
             // Setup the dropdown change event listener
@@ -107,7 +108,7 @@ function processData(rawData, attribute) {
 }
 
 function updateLineChart(data) {
-    console.log(data);
+    // console.log(data);
     y.domain([
         0,
         d3.max(
@@ -116,7 +117,7 @@ function updateLineChart(data) {
         ),
     ]).nice();
     g2.select(".axis--y").transition().call(d3.axisLeft(y));
-    console.log("Inside update linechart:" + data);
+    // console.log("Inside update linechart:" + data);
     const lines = g2.selectAll(".line-group").data(data, (d) => d.key);
 
     const linesEnter = lines.enter().append("g").attr("class", "line-group");
@@ -144,7 +145,7 @@ function updateLineChart(data) {
                 .style("stroke-opacity", 0.8);
         })
         .on("click", function (event, d) {
-            console.log("Clicked for key value " + d.key);
+            // console.log("Clicked for key value " + d.key);
             highlightElement(d.key);
         });
 
@@ -174,14 +175,14 @@ function setFilterGenre(genre) {
     let url = 'http://127.0.0.1:5000/set_filter_listed';
     url += `?listed_in=${encodedGenre}`;
 
-    console.log(`URL: ${url}`)
+    // console.log(`URL: ${url}`)
     // Use the Fetch API to send the request
     fetch(url, {
         method: 'POST'
     })
         .then(response => response.json())
         .then(data => {
-            console.log('Success:', data);
+            // console.log('Success:', data);
             updateChoro();
             plotPcpFinal();
             // alert(`Filter updated: ${JSON.stringify(data)}`);

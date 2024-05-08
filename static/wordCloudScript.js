@@ -3,7 +3,7 @@ let currentWordCloudData;
 function plotWordCloud() {
   d3.json(`http://127.0.0.1:5000/word_cloud_data`)
     .then(function (data) {
-      console.log("new word cloud mainData ", data);
+      // console.log("new word cloud mainData ", data);
       currentWordCloudData = data;
       updateWordCloud();
     })
@@ -16,7 +16,7 @@ function updateWordCloud() {
     currentWordCloudData
   );
   const dataField = document.getElementById("dataChoiceNew").value;
-  console.log("Selected field for word cloud: ", dataField);
+  // console.log("Selected field for word cloud: ", dataField);
   let texts; // This will hold an array of text elements to process
   let topHowMany = 10;
   if (dataField === "description") {
@@ -93,6 +93,8 @@ function tokenize(text) {
 function drawWordCloud(words) {
   const svg = d3.select("#wcloud");
   svg.selectAll("g").remove(); // Clear previous SVG
+  const width = +svg.attr("width");
+  const height = +svg.attr("height");
   const colorThresholds = { large: 25, medium: 18 };
   const colors = { large: "#ff6347", medium: "#4682b4", small: "#3cb371" };
 
@@ -104,14 +106,13 @@ function drawWordCloud(words) {
 
   var layout = d3.layout
     .cloud()
-    .size([320, 330])
+    .size([500, 550])
     .words(words)
-    .padding(5)
     .rotate(0)
     .font("Impact")
     .fontSize((d) => d.size)
     .on("end", function (drawnWords) {
-      const group = svg.append("g").attr("transform", "translate(167.5,150)");
+      const group = svg.append("g").attr("transform", "translate(200,200)");
       group
         .selectAll("text")
         .data(drawnWords)
@@ -130,11 +131,13 @@ function drawWordCloud(words) {
 
 document.addEventListener("DOMContentLoaded", () => {
   const svg = d3.select("#wcloud");
+  const width = svg.node().getBoundingClientRect().width;
+  const height = svg.node().getBoundingClientRect().height;
   const select = svg
     .append("foreignObject")
-    .attr("width", 80)
+    .attr("width", 100)
     .attr("height", 30)
-    .attr("x", 335 - 100)
+    .attr("x", width - 100)
     .attr("y", 0)
     .append("xhtml:select")
     .attr("id", "dataChoiceNew");

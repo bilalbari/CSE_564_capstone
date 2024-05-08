@@ -50,11 +50,13 @@ function updateChoro() {
     ])
         .then(([world, data]) => {
             const countries = world.features;
-            console.log("Countries:", countries);
+            // console.log("Countries:", countries);
             const svg = d3.select("#choropleth_img");
-            svg.selectAll("*").remove(); // Clear previous renders
-            const width = +svg.attr("width");
-            const height = +svg.attr("height");
+            const dimensions = svg.node().getBoundingClientRect();
+            svg.selectAll("*").transition().remove(); // Clear previous renders
+            const width = dimensions.width;
+            const height = dimensions.height;
+            console.log("For choropleth Width:", width, "Height:", height);
 
             const projection = d3.geoNaturalEarth1()
                 .fitSize([width, height], world); // Assuming geojsonData contains your features

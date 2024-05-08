@@ -12,22 +12,24 @@ const colorMap = [
 ];
 const margin = {
   top: 55,
-  right: 45,
-  bottom: 55,
-  left: 45,
+  right: 10,
+  bottom: 20,
+  left: 110,
 };
-const width = 800 - margin.left - margin.right;
-const height = 300 - margin.top - margin.bottom;
+let svg = d3.select("#pcpPlot");
+const dimensions = svg.node().getBoundingClientRect();
+console.log("Dimensions:", dimensions);
+const width = dimensions.width - margin.left - margin.right;
+const height = dimensions.height - margin.top - margin.bottom;
 let pcpData, pcpDataDim, dataDim;
 let ordering = {};
 var line = d3.line();
 var line_1, line_2;
-let x, svg, g;
+let x, g;
 
 function clearPcpPlot() {
   console.log("Clearing plot...");
-  var container = document.getElementById("pcpPlotId");
-  container.innerHTML = "";
+  svg.selectAll("*").remove();
 }
 
 function setCustomValue(A) {
@@ -51,12 +53,14 @@ function createScale(value) {
 
 function plotPcp() {
   clearPcpPlot();
+  const mergedData = mergeActiveDataWithFullData(pcpData);
+  updateOtherCharts(mergedData);
   console.log("Plotting pcp start, pcpData", pcpData);
   x = createXScale();
-  svg = createSvg();
-  appendLines(svg);
-  appendAxes(svg, x);
-  appendBrushes(svg);
+  let gx = createGroup();
+  appendLines(gx);
+  appendAxes(gx, x);
+  appendBrushes(gx);
 }
 
 function createXScale() {
@@ -66,14 +70,8 @@ function createXScale() {
     .range([0, width]);
 }
 
-function createSvg() {
-  return d3
-    .select("#pcpPlotId")
-    .append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-    .attr("margin_left", 100)
-    .append("g")
+function createGroup() {
+  return svg.append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 }
 
@@ -119,12 +117,13 @@ function appendAxes(svg, xScale) {
     })
     .append("text")
     .attr("class", "axis-label")
-    .attr("y", -25)
-    .style("fill", "white")
-    .style("font-size", 10)
+    .attr("y", -15)
+    .style("font-size", 16)
+    .style("font-weight", "bold")
     .text(function (data) {
       return data.value;
     });
+
 }
 
 function appendLines(svg, xScale) {
@@ -208,9 +207,9 @@ function getData(svg) {
 
 // This function merges the active data with full data to include all columns
 function mergeActiveDataWithFullData(activeData) {
-  console.log("activeData ", activeData);
+  // console.log("activeData ", activeData);
   const activeIds = new Set(activeData.map((d) => d.show_id)); // Assuming there's an 'id' to uniquely identify rows
-  console.log("active ids ", activeIds);
+  // console.log("active ids ", activeIds);
   return fullData.filter((d) => activeIds.has(d.show_id));
 }
 
@@ -253,7 +252,7 @@ function setFilterShowID(showIDs) {
   })
     .then(response => response.json())
     .then(data => {
-      console.log('Success:', data);
+      // console.log('Success:', data);
       updateChoro();
       updateLineChartGlobal();
       updateChart();
@@ -267,7 +266,7 @@ function setFilterShowID(showIDs) {
 function updateOtherCharts(data) {
   // This function would implement whatever updates are needed for other charts.
   // For demonstration, just logging the data to console.
-  console.log("Updating other charts with data:", data);
+  // console.log("Updating other charts with data:", data);
   currentWordCloudData = data;
   const showIDS = data.map(item => item.show_id);
   setFilterShowID(showIDS);

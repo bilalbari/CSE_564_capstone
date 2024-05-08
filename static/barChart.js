@@ -4,7 +4,7 @@ async function fetchData(attribute = "listed_in") {
     const data = await response.json();
     // Sort data by rating and slice to get top 8
     const sortedData = data.sort((a, b) => b.rating - a.rating);
-    console.log(sortedData);
+    // console.log(sortedData);
     const topData = sortedData.slice(0, 8);
     const otherData = sortedData.slice(8);
 
@@ -13,7 +13,7 @@ async function fetchData(attribute = "listed_in") {
         const otherAvg = otherData.reduce((acc, curr) => acc + curr.rating, 0) / otherData.length;
         topData.push({ [attribute]: "Other", rating: otherAvg });
     }
-    console.log(topData);
+    // console.log(topData);
 
     return topData;
 }
@@ -22,9 +22,10 @@ function drawBarChart(data, attribute = "listed_in") {
     const svg = d3.select("#barChart");
     const color = d3.scaleOrdinal(d3.schemeCategory10);
     svg.selectAll("*").remove(); // Clear previous renders
-    const margin = { top: 40, right: 20, bottom: 30, left: 40 };
-    const width = +svg.attr("width") - margin.left - margin.right;
-    const height = +svg.attr("height") - margin.top - margin.bottom;
+    const margin = { top: 40, right: 20, bottom: 60, left: 60 };
+    const dimensions = svg.node().getBoundingClientRect();
+    const width = dimensions.width - margin.left - margin.right;
+    const height = dimensions.height - margin.top - margin.bottom;
     const g = svg.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
 
     // Define x and y scales
@@ -41,22 +42,23 @@ function drawBarChart(data, attribute = "listed_in") {
     g.append("g")
         .attr("class", "axis axis--x")
         .attr("transform", `translate(0,${height})`)
-        .call(d3.axisBottom(x))
-        .selectAll("text")
-        .style("text-anchor", "end")
-        .attr("dx", "-.8em")
-        .attr("dy", ".15em")
-        .attr("transform", "rotate(-65)");
+        .call(d3.axisBottom(x));
+
+    g.selectAll(".tick text")
+        .style("text-anchor", "middle")  // Centers the text
+        .call(wrap, 50);
 
     // Y-axis
     g.append("g")
         .attr("class", "axis axis--y")
-        .call(d3.axisLeft(y).ticks(10))
-        .append("text")
+        .call(d3.axisLeft(y).ticks(10));
+
+    g.append("text")
         .attr("transform", "rotate(-90)")
-        .attr("y", 6)
-        .attr("dy", "0.71em")
-        .attr("text-anchor", "end")
+        .attr("y", -40)
+        .attr("x", -height / 2)
+        .attr("text-anchor", "middle")
+        .attr("color", "white")
         .text("Rating");
 
     // Draw bars

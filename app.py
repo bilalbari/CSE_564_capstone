@@ -181,6 +181,27 @@ def set_showid_filter():
     filter_settings['showIDs'] = show_ids
     return jsonify({'message': f'Show IDs filter set', 'showIDs': show_ids}), 200
 
+
+def assign_soft_clusters(row):
+    value = row['month_of_release']
+    # Define boundaries
+    if 1 <= value <= 4:
+        cluster = 0
+    elif 5 <= value <= 8:
+        cluster = 1
+    elif 9 <= value <= 12:
+        cluster = 2
+
+    # Soften boundaries at 4, 8, 12
+    boundary_clusters = {
+        4: [0, 1],
+        8: [1, 2],
+        12: [2, 0]  # Assuming a wrap-around or some logic; adjust as needed
+    }
+    if value in boundary_clusters:
+        cluster = np.random.choice(boundary_clusters[value])
+    return cluster
+
 # Read PCP data for data
 def read_pcp_data():
     cols = ["show_id", "type","country","release_year","rating","duration","month_of_release"]
@@ -195,9 +216,8 @@ def read_pcp_data():
         df = df[df['show_id'].isin(filter_settings['showIDs'])]
     df = df[cols]
     df = df.dropna(subset=['show_id', 'type','country','release_year','rating','duration','month_of_release'])
-    # df['country'] = df['country'].apply(ast.literal_eval)
-    # df['country'] = df['country'].apply(lambda x: x[0])
-    df['cluster'] = np.random.randint(0, 3, size=len(df))
+    
+    df['cluster'] = df.apply(assign_soft_clusters, axis=1)
     # df = df.sample(n=100, random_state=42)
     return df
 

@@ -4,7 +4,7 @@ body {
     margin: 0;
     padding: 0;
     background-color: #000000;
-    color: #2f2f2f;
+    color: white;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
@@ -45,54 +45,56 @@ body {
 }
 
 .dashboard-container {
-    /* Adjusts for header height */
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    height: calc(100% - 60px);
+    /* Reduce the height by the header's height */
+    overflow: hidden;
+    /* Prevent scrolling within the dashboard */
 }
 
 .dashboard-box {
     background-color: #121212;
-    padding: 15px;
-    margin: 5px;
+    margin: 2px;
     flex-grow: 1;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     display: flex;
     align-items: center;
     justify-content: center;
-    /* stroke: #fffefe; */
-}
-
-.dashboard-box text {
-    fill: #fffefe;
-    /* stroke: #fffefe; */
+    height: 100%;
+    color: #fff;
 }
 
 .row {
+    flex: 1;
+    /* Distribute available space equally between rows */
+    display: flex;
+    /* Ensure flex properties apply to row children */
     margin: 0 -5px;
+    /* Adjust according to your layout needs */
 }
 
 .col,
+.col-md-4,
+.col-md-5,
 .col-md-6,
-.col-md-3,
-.col-md-6 {
+.col-md-3 {
     padding: 0 5px;
+    /* Adjust spacing between columns */
+    /* flex: 1; */
+    /* Ensure columns take full available space */
 }
 
-svg {
-    margin: 5px;
-    border: 1px solid #ccc;
-    font-family: "Impact";
-    overflow: hidden;
-    /* Prevents drawing outside the SVG */
-}
-
-.axis text {
-    fill: rgb(255, 255, 255);
+svg .axis text {
     stroke-width: 1.5px;
-    font-size: small;
-    /* Bolder axis text */
+    font-size: 13px;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #ffffff;
+}
+
+.text {
+    color: #fff;
 }
 
 
@@ -109,26 +111,13 @@ svg {
     shape-rendering: crispEdges;
 }
 
-.chart-container {
-    height: 265px;
-    width: 685px;
-    background-color: white;
-    margin: 20px;
-}
-
-.small-chart-container {
-    height: 265px;
-    width: 325px;
-    background-color: white;
-    margin: 20px;
-}
 
 .lineDropdown {
     padding: 4px 12px;
     font-size: 16px;
     border-radius: 4px;
-    border: 1px solid #ccc;
-    background-color: #fff;
+    /* border: 1px solid #ccc;
+    background-color: #fff; */
     color: #333;
     outline: none;
     cursor: pointer;
@@ -136,23 +125,12 @@ svg {
 }
 
 #wcloud {
-    width: 335px;
-    /* Width set to 335px */
-
-    height: 300px;
-    /* Height set to 300px */
-
     display: flex;
     justify-content: center;
     align-items: center;
     margin: auto;
 }
 
-.axis text {
-    text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff;
-    cursor: grab;
-}
-
 .line1 path {
     fill: none;
     stroke: rgb(226, 224, 224);
@@ -164,33 +142,17 @@ svg {
     stroke: rgb(61, 113, 155);
 }
 
-.axis text {
-    text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff;
-    cursor: grab;
+svg {
+    /* width: 100%; */
+    /* height: 100%; */
+    display: block;
+    /* Ensures there are no unnecessary margins */
 }
 
-.line1 path {
-    fill: none;
-    stroke: rgb(226, 224, 224);
+text {
     shape-rendering: crispEdges;
-}
-
-.line2 path {
-    fill: none;
-    stroke: rgb(61, 113, 155);
-}
-
-.tooltip {
-    position: absolute;
-    visibility: hidden;
-    background-color: #fffafa;
-    color: #ffffff;
-    border: 1px solid #ff0000;
-    padding: 8px;
-    box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.5);
-    border-radius: 4px;
-    text-align: left;
-    font-size: 14px;
-    line-height: 1.4;
-    z-index: 1000;
+    /* Makes edges sharper, can affect legibility */
+    text-rendering: optimizeLegibility;
+    fill: rgb(255, 254, 254);
+    /* Improves text rendering at the cost of performance */
 }
