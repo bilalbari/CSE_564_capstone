@@ -10,6 +10,7 @@ svg2.on("click", function (event) {
     // Check if the click is on the background
     if (event.target.tagName === "svg") {
         d3.selectAll(".bar, .line").style("opacity", 0.8).style("stroke-width", 2);
+        setFilterYear(3000);
     }
 });
 const x2 = d3.scaleLinear().domain([1, 12]).range([0, width2]); // Assuming months 1-12
@@ -226,7 +227,7 @@ function setFilterGenre(genre) {
         .then(data => {
             // console.log('Success:', data);
             updateChoro();
-            plotPcpFinal();
+            plotPcpFinalAlt();
             // alert(`Filter updated: ${JSON.stringify(data)}`);
         })
         .catch((error) => {

@@ -1,6 +1,7 @@
 const odometerSvg = d3.select("#odometer");
-const odometerWidth = +odometerSvg.attr("width");
-const odometerHeight = +odometerSvg.attr("height") - 50; // leave some space for labels
+const dimensionsOdo = svg.node().getBoundingClientRect();
+const odometerWidth = dimensionsOdo.width
+const odometerHeight = dimensionsOdo.height - 50; // leave some space for labels
 const gaugeGroup = odometerSvg
   .append("g")
   .attr("transform", `translate(${odometerWidth / 2}, ${odometerHeight})`);

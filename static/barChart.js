@@ -24,6 +24,7 @@ function drawBarChart(data, attribute = "listed_in") {
         // Check if the click is on the background
         if (event.target.tagName === "svg") {
             d3.selectAll(".bar, .line").style("opacity", 0.8).style("stroke-width", 2);
+            setFilterYear(3000);
         }
     });
     const color = d3.scaleOrdinal(d3.schemeCategory10);

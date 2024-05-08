@@ -53,8 +53,20 @@ function createScale(value) {
 
 function plotPcp() {
   clearPcpPlot();
-  // const mergedData = mergeActiveDataWithFullData(pcpData);
-  // updateOtherCharts(mergedData);
+  const mergedData = mergeActiveDataWithFullData(pcpData);
+  updateOtherCharts(mergedData);
+  console.log("Plotting pcp start, pcpData", pcpData);
+  x = createXScale();
+  let gx = createGroup();
+  appendLines(gx);
+  appendAxes(gx, x);
+  appendBrushes(gx);
+}
+
+function plotPcpAlt() {
+  clearPcpPlot();
+  const mergedData = mergeActiveDataWithFullData(pcpData);
+  updateOtherChartsAlt(mergedData);
   console.log("Plotting pcp start, pcpData", pcpData);
   x = createXScale();
   let gx = createGroup();
@@ -270,6 +282,29 @@ function updateDisplay() {
   }
 }
 
+function setFilterShowIDAlt(showIDs) {
+  // console.log("Setting filter showIDs: ", showIDs);
+  fetch('http://127.0.0.1:5000/set_showid_filter', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ showIDs: showIDs }) // Send showIDs as a JSON object
+  })
+    .then(response => response.json())
+    .then(data => {
+      // console.log('Success:', data);
+      console.log("Update chart from set filter");
+      // updateChoro();
+      // updateLineChartGlobal();
+      // updateChart();
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+      // alert(`Error setting filter: ${error}`);
+    });
+}
+
 function setFilterShowID(showIDs) {
   // console.log("Setting filter showIDs: ", showIDs);
   fetch('http://127.0.0.1:5000/set_showid_filter', {
@@ -300,6 +335,16 @@ function updateOtherCharts(data) {
   currentWordCloudData = data;
   const showIDS = data.map(item => item.show_id);
   setFilterShowID(showIDS);
+  updateWordCloud();
+}
+
+function updateOtherChartsAlt(data) {
+  // This function would implement whatever updates are needed for other charts.
+  // For demonstration, just logging the data to console.
+  // console.log("Updating other charts with data:", data);
+  currentWordCloudData = data;
+  const showIDS = data.map(item => item.show_id);
+  setFilterShowIDAlt(showIDS);
   updateWordCloud();
 }
 
