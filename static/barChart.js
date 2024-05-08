@@ -20,6 +20,12 @@ async function fetchData(attribute = "listed_in") {
 
 function drawBarChart(data, attribute = "listed_in") {
     const svg = d3.select("#barChart");
+    svg.on("click", function (event) {
+        // Check if the click is on the background
+        if (event.target.tagName === "svg") {
+            d3.selectAll(".bar, .line").style("opacity", 0.8).style("stroke-width", 2);
+        }
+    });
     const color = d3.scaleOrdinal(d3.schemeCategory10);
     svg.selectAll("*").remove(); // Clear previous renders
     const margin = { top: 40, right: 20, bottom: 60, left: 60 };
@@ -94,5 +100,87 @@ async function updateChart(selectedAttribute) {
     const data = await fetchData(selectedAttribute);
     drawBarChart(data, selectedAttribute);
 }
+
+// function drawBarChart(data, attribute = "listed_in") {
+//     const svg = d3.select("#barChart");
+//     const color = d3.scaleOrdinal(d3.schemeCategory10);
+//     if (!svg.selectAll("g").empty()) {
+//         svg.selectAll("*").remove(); // Clear previous renders if not first run
+//     }
+//     const margin = { top: 40, right: 20, bottom: 60, left: 60 };
+//     const dimensions = svg.node().getBoundingClientRect();
+//     const width = dimensions.width - margin.left - margin.right;
+//     const height = dimensions.height - margin.top - margin.bottom;
+//     const g = svg.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
+
+//     // Define x and y scales
+//     const x = d3.scaleBand()
+//         .rangeRound([0, width])
+//         .padding(0.1)
+//         .domain(data.map(d => d[attribute]));
+
+//     const y = d3.scaleLinear()
+//         .rangeRound([height, 0])
+//         .domain([0, d3.max(data, d => d.rating)]);
+
+//     // Append the x-axis
+//     const xAxis = g.append("g")
+//         .attr("class", "axis axis--x")
+//         .attr("transform", `translate(0,${height})`)
+//         .call(d3.axisBottom(x));
+
+//     // Y-axis
+//     const yAxis = g.append("g")
+//         .attr("class", "axis axis--y")
+//         .call(d3.axisLeft(y).ticks(10));
+
+//     // Transition for axes
+//     svg.selectAll(".axis--x").transition().duration(1000).call(d3.axisBottom(x));
+//     svg.selectAll(".axis--y").transition().duration(1000).call(d3.axisLeft(y));
+
+
+//     // Draw bars with transition
+//     const bars = g.selectAll(".bar")
+//         .data(data, d => d[attribute]);
+
+//     bars.enter().append("rect")
+//         .attr("class", "bar")
+//         .attr("x", d => x(d[attribute]))
+//         .attr("y", d => y(d.rating))
+//         .attr("width", x.bandwidth())
+//         .attr("height", d => height - y(d.rating))
+//         .style("fill", (d, i) => color(i))
+//         .style("stroke", "white")
+//         .style("opacity", 0.8)
+//         .on("mouseover", function (event, d) {
+//             d3.select(this).transition().duration(300).style("opacity", 1);
+//         })
+//         .on("mouseout", function (event, d) {
+//             d3.select(this).transition().duration(300).style("opacity", 0.8);
+//         })
+//         .attr("data-key", d => d[attribute])
+//         .on("click", function (event, d) {
+//             highlightElement(d[attribute]);
+//         })
+//         .merge(bars) // Merge enter and update selections
+//         .transition() // Apply a transition when updating
+//         .duration(1000)
+//         .attr("y", d => y(d.rating))
+//         .attr("height", d => height - y(d.rating))
+//         .attr("x", d => x(d[attribute]))
+//         .attr("width", x.bandwidth());
+
+//     bars.exit()
+//         .transition() // Transition for removing bars
+//         .duration(1000)
+//         .style("opacity", 0)
+//         .remove();
+// }
+
+// async function updateChart(selectedAttribute) {
+//     const data = await fetchData(selectedAttribute);
+//     drawBarChart(data, selectedAttribute);
+// }
+
 
 updateChart(); // Initial call to draw the chart

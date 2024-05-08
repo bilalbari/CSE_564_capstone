@@ -70,6 +70,7 @@ function updateLineChartGlobal() {
             d3.select("#dataChoice").on("change", function () {
                 const selectedCategory = d3.select(this).property("value");
                 const processedData = processData(rawData, selectedCategory);
+                console.log("Selected category: " + selectedCategory);
                 updateLineChart(processedData);
                 updateChart(selectedCategory);
             });
@@ -122,34 +123,75 @@ function updateLineChart(data) {
 
     const linesEnter = lines.enter().append("g").attr("class", "line-group");
 
-    linesEnter
-        .append("path")
+    linesEnter.append("path")
         .attr("class", "line")
-        .merge(lines.select(".line")) // enter + update
-        .attr("d", (d) => lineGenerator(d.values))
         .style("fill", "none")
         .style("stroke", (d, i) => color(i))
         .style("stroke-width", 3)
+        .attr("d", d => lineGenerator(d.values)); // initial line position
+
+    // Update existing lines with transition
+    lines.select(".line")
+        .transition()  // Start a transition to animate changes
+        .duration(1000)  // Duration of transition in milliseconds
+        .attr("d", d => lineGenerator(d.values))  // New data for line
+        .style("stroke", (d, i) => color(i));
+
+    // Handle exiting lines
+    lines.exit()
+        .transition()
+        .duration(300)
+        .style("opacity", 0)
+        .remove();
+
+    // Mouseover, mouseout, and click events to highlight lines
+    lines.merge(linesEnter).select(".line")
         .on("mouseover", (event, d) => {
             d3.select(event.currentTarget)
                 .transition()
-                .duration(150) // Select the path element that triggered the event
-                .style("stroke-width", 6) // Increase stroke width
+                .duration(150)
+                .style("stroke-width", 6)
                 .style("stroke-opacity", 1);
         })
         .on("mouseout", (event) => {
             d3.select(event.currentTarget)
                 .transition()
-                .duration(150) // Select the path element that triggered the event
-                .style("stroke-width", 3) // Reset stroke width
+                .duration(150)
+                .style("stroke-width", 3)
                 .style("stroke-opacity", 0.8);
         })
         .on("click", function (event, d) {
-            // console.log("Clicked for key value " + d.key);
             highlightElement(d.key);
         });
 
-    lines.exit().remove();
+    // linesEnter
+    //     .append("path")
+    //     .attr("class", "line")
+    //     .merge(lines.select(".line")) // enter + update
+    //     .attr("d", (d) => lineGenerator(d.values))
+    //     .style("fill", "none")
+    //     .style("stroke", (d, i) => color(i))
+    //     .style("stroke-width", 3)
+    //     .on("mouseover", (event, d) => {
+    //         d3.select(event.currentTarget)
+    //             .transition()
+    //             .duration(150) // Select the path element that triggered the event
+    //             .style("stroke-width", 6) // Increase stroke width
+    //             .style("stroke-opacity", 1);
+    //     })
+    //     .on("mouseout", (event) => {
+    //         d3.select(event.currentTarget)
+    //             .transition()
+    //             .duration(150) // Select the path element that triggered the event
+    //             .style("stroke-width", 3) // Reset stroke width
+    //             .style("stroke-opacity", 0.8);
+    //     })
+    //     .on("click", function (event, d) {
+    //         // console.log("Clicked for key value " + d.key);
+    //         highlightElement(d.key);
+    //     });
+
+    // lines.exit().remove();
 }
 
 function highlightElement(selectedKey) {

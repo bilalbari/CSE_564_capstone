@@ -53,8 +53,8 @@ function createScale(value) {
 
 function plotPcp() {
   clearPcpPlot();
-  const mergedData = mergeActiveDataWithFullData(pcpData);
-  updateOtherCharts(mergedData);
+  // const mergedData = mergeActiveDataWithFullData(pcpData);
+  // updateOtherCharts(mergedData);
   console.log("Plotting pcp start, pcpData", pcpData);
   x = createXScale();
   let gx = createGroup();
@@ -150,16 +150,37 @@ function appendLines(svg, xScale) {
 }
 
 function appendBrushes(svg) {
-  svg
-    .selectAll(".f")
+  // svg
+  //   .selectAll(".f")
+  //   .append("g")
+  //   .attr("class", "brush")
+  //   .each(function (data) {
+  //     d3.select(this).call(createBrush(data.range_value));
+  //   })
+  //   .selectAll("rect")
+  //   .attr("x", -10)
+  //   .attr("width", 15);
+
+  const brushGroup = svg.selectAll(".f") // Each axis g element gets a brush group
     .append("g")
-    .attr("class", "brush")
-    .each(function (data) {
-      d3.select(this).call(createBrush(data.range_value));
-    })
-    .selectAll("rect")
-    .attr("x", -10)
-    .attr("width", 15);
+    .attr("class", "brush");
+
+  brushGroup.each(function (data) {
+    // const brush = d3.brushY()
+    //   .extent([
+    //     [-10, 0],
+    //     [10, height]
+    //   ])
+    //   .on("start brush", (event) => {
+    //     brushmove(event, data);
+    //   })
+    //   .on("end", brushend);
+
+    d3.select(this).call(createBrush(data.range_value));
+  });
+
+  // Prevent drag behavior when brushing
+  brushGroup.on("mousedown touchstart", event => event.stopPropagation());
 }
 
 function createBrush(range_value) {
@@ -177,11 +198,18 @@ function createBrush(range_value) {
     });
 }
 
-const dragBehavior = d3
-  .drag()
+// const dragBehavior = d3
+//   .drag()
+//   .on("start", dragStart)
+//   .on("drag", dragMove)
+//   .on("end", dragEnd);
+
+const dragBehavior = d3.drag()
   .on("start", dragStart)
   .on("drag", dragMove)
-  .on("end", dragEnd);
+  .on("end", dragEnd)
+  .filter(event => !event.button && event.type !== 'brush');  // Ignore drag if event is a brush
+
 
 function slider(svg) {
   var dat = getData(svg);
@@ -243,6 +271,7 @@ function updateDisplay() {
 }
 
 function setFilterShowID(showIDs) {
+  // console.log("Setting filter showIDs: ", showIDs);
   fetch('http://127.0.0.1:5000/set_showid_filter', {
     method: 'POST',
     headers: {
@@ -253,6 +282,7 @@ function setFilterShowID(showIDs) {
     .then(response => response.json())
     .then(data => {
       // console.log('Success:', data);
+      console.log("Update chart from set filter");
       updateChoro();
       updateLineChartGlobal();
       updateChart();
@@ -273,19 +303,21 @@ function updateOtherCharts(data) {
   updateWordCloud();
 }
 
-function dragStart(data) {
+function dragStart(event, data) {
+  if (event.sourceEvent && event.sourceEvent.type === "brush") return;
   // console.log("dragStart data ", data);
-  subject = data.subject;
+  subject = data;
   ordering[subject.value] = x(subject.value);
   // line_1.attr("visibility", "hidden");
 }
 
-function dragMove(data) {
+function dragMove(event, data) {
+  if (event.sourceEvent && event.sourceEvent.type === "brush") return;
   // console.log("dragMove data ", data);
-  subject = data.subject;
+  subject = data;
   // console.log("dragMove subject ", subject);
   // console.log("d3 event", d3.event);
-  ordering[subject.value] = Math.min(width, Math.max(0, data.x));
+  ordering[subject.value] = Math.min(width, Math.max(0, event.x));
   line_2.attr("d", linePath);
   pcpDataDim.sort(function (a, b) {
     return plot(a) - plot(b);
@@ -300,9 +332,10 @@ function dragMove(data) {
   });
 }
 
-function dragEnd(data) {
+function dragEnd(event, data) {
+  if (event.sourceEvent && event.sourceEvent.type === "brush") return;
   // console.log("dragEnd data", data);
-  subject = data.subject;
+  subject = data;
   delete ordering[subject.value];
   axisAdjustment(d3.select(this)).attr(
     "transform",

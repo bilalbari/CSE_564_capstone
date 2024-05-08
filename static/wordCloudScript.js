@@ -11,10 +11,10 @@ function plotWordCloud() {
 }
 
 function updateWordCloud() {
-  console.log(
-    "received data for population in word cloud",
-    currentWordCloudData
-  );
+  // console.log(
+  //   "received data for population in word cloud",
+  //   currentWordCloudData
+  // );
   const dataField = document.getElementById("dataChoiceNew").value;
   // console.log("Selected field for word cloud: ", dataField);
   let texts; // This will hold an array of text elements to process
@@ -54,7 +54,7 @@ function updateWordCloud() {
     .slice(0, topHowMany)
     .map((word) => ({ text: word, size: wordCounts[word] }));
 
-  console.log("current map ", topWords);
+  // console.log("current map ", topWords);
 
   // Calculate the minimum and maximum sizes
   const sizes = topWords.map((word) => word.size);
@@ -78,7 +78,7 @@ function updateWordCloud() {
     size: Math.round(scaleSize(word.size, minSize, maxSize, 16, 30)), // Round to nearest whole number
   }));
 
-  console.log("scaledTopWords", scaledTopWords);
+  // console.log("scaledTopWords", scaledTopWords);
 
   drawWordCloud(scaledTopWords);
 }
