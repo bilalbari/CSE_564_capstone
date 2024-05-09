@@ -185,13 +185,14 @@ def set_showid_filter():
 def assign_soft_clusters(row):
     value = row['month_of_release']
     # Define boundaries
+    cluster = np.random.choice([0, 1, 2])
     if 1 <= value <= 4:
         cluster = 0
     elif 5 <= value <= 8:
         cluster = 1
     elif 9 <= value <= 12:
         cluster = 2
-
+    
     # Soften boundaries at 4, 8, 12
     boundary_clusters = {
         4: [0, 1],

@@ -70,14 +70,20 @@ function updateChoro() {
                 .join("path")
                 .attr("d", pathGenerator)
                 .attr("fill", d => {
+                    let country = d.properties.name;
+                    if (d.properties.name == "England")
+                        country = "United Kingdom";
                     // console.log("Rendering country:", d.properties.name);
-                    const count = dataMap.get(d.properties.name);
+                    const count = dataMap.get(country);
                     return count ? colorScale(count) : "#ccc";
                 })
                 .on('click', function (event, d) {
+                    let country = d.properties.name;
+                    if (d.properties.name == "England")
+                        country = "United Kingdom";
                     // Make an API request to the backend with the selected country
-                    console.log("Clicked on country:", d.properties.name);
-                    updateDataBasedOnCountry(d.properties.name);
+                    console.log("Clicked on country:", country);
+                    updateDataBasedOnCountry(country);
                 })
                 .on('mouseover', function (event, d) {
                     d3.select(this)

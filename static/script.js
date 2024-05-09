@@ -10,6 +10,8 @@ function updateDashboard(year) {
     // Actual implementation would involve AJAX calls or data filtering logic here
 }
 
+const genres = ['TV Action & Adventure', 'TV Dramas', 'Thrillers', 'Music & Musicals', 'Crime TV Shows', 'Horror Movies', 'Stand-Up Comedy'];
+
 function resetDashboard() {
     renderPlot();
 }

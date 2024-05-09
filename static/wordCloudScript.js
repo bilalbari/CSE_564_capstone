@@ -107,6 +107,7 @@ function drawWordCloud(words) {
   var layout = d3.layout
     .cloud()
     .size([500, 550])
+    .padding(5)
     .words(words)
     .rotate(0)
     .font("Impact")
