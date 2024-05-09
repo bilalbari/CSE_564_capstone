@@ -11,6 +11,7 @@ function updateDashboard(year) {
 }
 
 const genres = ['TV Action & Adventure', 'TV Dramas', 'Thrillers', 'Music & Musicals', 'Crime TV Shows', 'Horror Movies', 'Stand-Up Comedy'];
+const types = ['Movie', 'TV Show'];
 
 function resetDashboard() {
     renderPlot();

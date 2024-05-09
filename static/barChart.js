@@ -29,6 +29,10 @@ function drawBarChart(data, attribute = "listed_in") {
     });
     const color = d3.scaleOrdinal().domain(genres)
         .range(d3.schemeCategory10);
+
+    const colorTypes = d3.scaleOrdinal().domain(["Movie", "TV Show"])
+        .range(d3.schemeCategory10);
+
     svg.selectAll("*").remove(); // Clear previous renders
     const margin = { top: 40, right: 20, bottom: 60, left: 60 };
     const dimensions = svg.node().getBoundingClientRect();
@@ -78,7 +82,12 @@ function drawBarChart(data, attribute = "listed_in") {
         .attr("y", d => y(d.rating))
         .attr("width", x.bandwidth())
         .attr("height", d => height - y(d.rating))
-        .style("fill", (d, i) => { return color(d[attribute]); })
+        .style("fill", (d, i) => {
+            if (attribute === "type") {
+                return colorTypes(d[attribute]);
+            }
+            return color(d[attribute]);
+        })
         .style("stroke", "white") // Add white border for contrast
         .style("opacity", 0.8) // Default opacity
         .on("mouseover", function (event, d) {

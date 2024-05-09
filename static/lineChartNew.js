@@ -52,6 +52,9 @@ const select = svg2
 const color = d3.scaleOrdinal().domain(genres)
     .range(d3.schemeCategory10);
 
+const colorTypes = d3.scaleOrdinal().domain(["Movie", "TV Show"])
+    .range(d3.schemeCategory10);
+
 function updateLineChartGlobal() {
     d3.json("http://127.0.0.1:5000/line_chart")
         .then(function (rawData) {
@@ -111,6 +114,7 @@ function processData(rawData, attribute) {
 }
 
 function updateLineChart(data) {
+    console.log("Inside update linechart:");
     // console.log(data);
     y.domain([
         0,
@@ -128,7 +132,12 @@ function updateLineChart(data) {
     linesEnter.append("path")
         .attr("class", "line")
         .style("fill", "none")
-        .style("stroke", (d, i) => color(d.key))
+        .style("stroke", (d, i) => {
+            if (d.key === "Movie" || d.key === "TV Show") {
+                return colorTypes(d.key);
+            }
+            return color(d.key);
+        })
         .style("stroke-width", 3)
         .attr("d", d => lineGenerator(d.values)); // initial line position
 
@@ -137,7 +146,13 @@ function updateLineChart(data) {
         .transition()  // Start a transition to animate changes
         .duration(1000)  // Duration of transition in milliseconds
         .attr("d", d => lineGenerator(d.values))  // New data for line
-        .style("stroke", (d, i) => color(d.key));
+        .style("stroke", (d, i) => {
+            console.log("The line chart key" + d.key);
+            if (d.key === "Movie" || d.key === "TV Show") {
+                return colorTypes(d.key);
+            }
+            return color(d.key);
+        });
 
     // Handle exiting lines
     lines.exit()

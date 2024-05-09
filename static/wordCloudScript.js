@@ -106,14 +106,14 @@ function drawWordCloud(words) {
 
   var layout = d3.layout
     .cloud()
-    .size([500, 550])
+    .size([400, 400])
     .padding(5)
     .words(words)
     .rotate(0)
     .font("Impact")
     .fontSize((d) => d.size)
     .on("end", function (drawnWords) {
-      const group = svg.append("g").attr("transform", "translate(200,200)");
+      const group = svg.append("g").attr("transform", "translate(190,175)");
       group
         .selectAll("text")
         .data(drawnWords)

@@ -306,6 +306,9 @@ function setFilterShowIDAlt(showIDs) {
 }
 
 function setFilterShowID(showIDs) {
+  if (showIDs.length === 0) {
+    return;
+  }
   // console.log("Setting filter showIDs: ", showIDs);
   fetch('http://127.0.0.1:5000/set_showid_filter', {
     method: 'POST',

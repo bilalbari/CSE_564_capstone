@@ -18,7 +18,7 @@ app = Flask(__name__)
 CORS(app)
 
 # Dataset file path
-dataset = "modified_new_netflix_data.csv"
+dataset = "modified_new_netflix_data2.csv"
 filter_settings = {
     'min_year': None,
     'max_year': None,
